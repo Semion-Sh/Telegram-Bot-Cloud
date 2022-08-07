@@ -11,8 +11,8 @@ b7 = KeyboardButton('/Workout')
 b8 = KeyboardButton('/AddOne')
 
 
-
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
 unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5, b2)
+unregistered_user_kb_reg = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5)
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b6, b7)
 water_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b8)

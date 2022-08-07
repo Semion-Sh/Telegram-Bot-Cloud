@@ -1,5 +1,5 @@
 from aiogram.dispatcher import Dispatcher
-from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb
+from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, unregistered_user_kb_reg
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import types
@@ -32,7 +32,7 @@ async def profile(message: types.Message):
             # await bot.send_message(message.from_user.id, list(profile))
         else:
             await FSMregistr.Nickname.set()
-            await message.answer('Enter your Nick')
+            await message.answer('Enter your Name')
 
 
 async def add_nickname(message: types.Message, state: FSMContext):
@@ -66,9 +66,9 @@ async def commands_start(message: types.Message):
 async def commands_help(message: types.Message):
     await bot.send_message(message.from_user.id, '''
     Список команд:
-/profile - ваш профиль
-/admin - профиль создателя Бота
-/water - контроль потребления воды
+/Profile - ваш профиль
+/Admin - профиль создателя Бота
+/Water - контроль потребления воды
                                                     ''')
 
 class FSMwater(StatesGroup):
@@ -82,13 +82,20 @@ async def water(message: types.Message, state: FSMContext):
         await message.answer('''Я могу контролировать потребление воды каждый день
 Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
 Чтобы начать - отправь "Yes"''')
+    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
+        await bot.send_message(message.from_user.id, '''Я могу контролировать потребление воды каждый день
+Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
+Для этого вам нужно зарегистрироваться''', reply_markup=unregistered_user_kb_reg)
+    elif s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+        await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
     else:
-        await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water.glass_of_water_today).filter(Water.users_id == message.from_user.id).first()} glass of water', reply_markup=water_kb)
+        await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water. To meet the norm per day, you need {8 - s.query(Water).get(message.from_user.id).glass_of_water_today} more', reply_markup=water_kb)
 
 
 async def status_water(message: types.Message, state: FSMContext):
         if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
-            await bot.send_message(message.from_user.id, 'start')
+            await bot.send_message(message.from_user.id, '''How to use:
+You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to press /AddOne''', reply_markup=main_kb )
             water = Water(id=message.from_user.id, users_id=message.from_user.id)
             s.add(water)
             s.commit()
@@ -101,8 +108,10 @@ async def AddOne(message: types.Message):
     s.query(Water).get(message.from_user.id).glass_of_water_today += 1
     s.commit()
     s.close()
-    await bot.send_message(message.from_user.id,
-                           f'Today you drank {s.query(Water.glass_of_water_today).filter(Water.users_id == message.from_user.id).first()} glass of water',
+    if s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+        await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
+    else: await bot.send_message(message.from_user.id,
+                           f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water. To meet the norm per day, you need {8 - s.query(Water).get(message.from_user.id).glass_of_water_today} more',
                            reply_markup=water_kb)
 
 
