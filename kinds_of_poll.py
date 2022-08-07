@@ -7,9 +7,9 @@ async def football_poll_rafieva_ratomka():
                         is_anonymous=False)
 
 
-async def test_football_poll():
-    await bot.send_poll(chat_id='-618708229', question='Футбол сегодня:',
-                        options=['Рафиева 55, 21:30(начало)', 'Ратомка 21:00(начало)', 'Не буду'],
+async def football_poll_rafieva():
+    await bot.send_poll(chat_id='-1001312541304', question='Рафиева 55, 21:30(начало)',
+                        options=['Буду', 'Не буду'],
                         is_anonymous=False)
 
 

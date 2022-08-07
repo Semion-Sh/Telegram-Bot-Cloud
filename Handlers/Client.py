@@ -12,7 +12,6 @@ from aiogram import types
 import json, string
 from aiogram.dispatcher import Dispatcher
 import asyncio, aioschedule
-from kinds_of_poll import football_poll_rafieva_ratomka, test_football_poll
 from aiogram.types import BotCommand
 from aiogram.dispatcher.filters.builtin import CommandStart, ChatTypeFilter
 
