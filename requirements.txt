@@ -3,5 +3,3 @@ asyncio
 aioschedule
 sqlalchemy
 faker
-os
-sqlite3
