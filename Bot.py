@@ -14,9 +14,7 @@ from Handlers.Client import data_null
 async def start_bot(_):
     print('Bot is starting')
     print(os.path.exists(DATABASE_NAME))
-    # DATABASE.create_db()
     SqlLiteDb.sql_start()
-    # users.sql_start()
     asyncio.create_task(spam_start())
     asyncio.create_task(data_null())
     await bot.set_my_commands(bot_commands)

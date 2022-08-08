@@ -14,6 +14,4 @@ async def football_poll_rafieva():
 
 
 # -1001312541304 football chat id
-
-
 # -1001323540103 sky_time

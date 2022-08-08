@@ -4,12 +4,10 @@ from aiogram.dispatcher import Dispatcher
 import asyncio, aioschedule
 from kinds_of_poll import football_poll_rafieva
 from aiogram.types import BotCommand
-from aiogram.dispatcher.filters.builtin import CommandStart, ChatTypeFilter
 
 
 bot_commands = [
     BotCommand('/admin', 'профиль создателя Бота'),
-    # BotCommand('/bible', 'чтение Библии')
 ]
 
 d = {

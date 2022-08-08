@@ -1,19 +1,14 @@
-from aiogram.dispatcher import Dispatcher
+import asyncio, aioschedule
 from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, unregistered_user_kb_reg
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram import types
 from create_bot import bot
-from DateBase import SqlLiteDb, users, DATABASE
+from DateBase import SqlLiteDb
 from DateBase.users import Users
 from DateBase.water import Water
-from DateBase.DATABASE import session, DATABASE_NAME
+from DateBase.DATABASE import session
 from aiogram import types
-import json, string
 from aiogram.dispatcher import Dispatcher
-import asyncio, aioschedule
-from aiogram.types import BotCommand
-from aiogram.dispatcher.filters.builtin import CommandStart, ChatTypeFilter
 
 
 s = session()
@@ -28,26 +23,21 @@ async def profile(message: types.Message):
     if message.chat.type == 'private':
         if s.query(Users.id).filter(Users.id == message.from_user.id).first():
             await bot.send_message(message.from_user.id, 'Choose a category:', reply_markup=profile_kb)
-            # profile = s.query(Users.id, Users.nick, Users.tg_username).filter(Users.id == message.from_user.id).first()
-            # await bot.send_message(message.from_user.id, list(profile))
         else:
             await FSMregistr.Nickname.set()
             await message.answer('Enter your Name')
 
 
 async def add_nickname(message: types.Message, state: FSMContext):
-    # if message.chat.type == 'private':
     id = message.from_user.id
     nick = message.text
     if message.from_user.username != None:
         tg_username = '@' + message.from_user.username
     else: tg_username = 'There is not'
     user = Users(id=id, nick=nick, tg_username=tg_username)
-    # water = Water(users_id=id)
     await bot.send_message(message.from_user.id, 'Registration completed', reply_markup=main_kb)
     await state.finish()
     s.add(user)
-    # s.add(water)
     s.commit()
     s.close()
 
@@ -71,13 +61,13 @@ async def commands_help(message: types.Message):
 /Water - контроль потребления воды
                                                     ''')
 
+
 class FSMwater(StatesGroup):
     start = State()
 
 
 async def water(message: types.Message, state: FSMContext):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
-            # s.query(Water.status).filter(Water.status == 0).first():
         await FSMwater.start.set()
         await message.answer('''Я могу контролировать потребление воды каждый день
 Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
@@ -104,7 +94,6 @@ You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to
 
 
 async def AddOne(message: types.Message):
-    # s.query(Water.glass_of_water_today).filter(Water.users_id == message.from_user.id).first() +=1
     s.query(Water).get(message.from_user.id).glass_of_water_today += 1
     s.commit()
     s.close()
@@ -113,9 +102,6 @@ async def AddOne(message: types.Message):
     else: await bot.send_message(message.from_user.id,
                            f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water. To meet the norm per day, you need {8 - s.query(Water).get(message.from_user.id).glass_of_water_today} more',
                            reply_markup=water_kb)
-
-
-# Для этого тебе нужно перейти в 'Profile' и выбрать 'Water'
 
 
 async def boys(message: types.Message):
@@ -127,11 +113,13 @@ async def creator(message: types.Message):
     if message.chat.type != 'private':
         await message.delete()
 
+
 async def ok():
     for i in s.query(Water).all():
         s.query(Water).get(i.id).glass_of_water_today = 0
     s.commit()
     s.close()
+
 
 async def data_null():
     aioschedule.every(1).day.at('21:00').do(ok)
@@ -151,5 +139,3 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(AddOne, commands=['AddOne'])
     dp.register_message_handler(boys, commands=['boys'])
     dp.register_message_handler(creator, commands=['admin'])
-
-

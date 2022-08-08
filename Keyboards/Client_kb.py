@@ -1,9 +1,8 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 b1 = KeyboardButton('/Profile')
 b2 = KeyboardButton('/Help')
-b3 = KeyboardButton('/Bible')
 b4 = KeyboardButton('где я', request_location=True)
 b5 = KeyboardButton('/Registration')
 b6 = KeyboardButton('/Water')

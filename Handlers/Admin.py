@@ -4,10 +4,9 @@ from aiogram import types
 from create_bot import bot, dp
 from aiogram.dispatcher import Dispatcher
 from aiogram.dispatcher.filters import Text
-from DateBase import SqlLiteDb, users
+from DateBase import SqlLiteDb
 from Keyboards import Admin_kb
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.dispatcher.filters.builtin import CommandStart, ChatTypeFilter
 
 
 ID = None

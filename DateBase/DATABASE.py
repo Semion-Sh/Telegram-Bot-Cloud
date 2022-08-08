@@ -1,8 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData, Column, String, Integer
 from faker import Faker
-from sqlalchemy import Column, String, Integer
 import os
 
 Base = declarative_base()
@@ -24,11 +23,7 @@ def create_db():
 session = sessionmaker(bind=engine)
 
 
-def _load_fake_data(session: session):
-    ...
-
-
-def create_database(load_fake_data: bool=True):
-    create_db()
-    if load_fake_data:
-        _load_fake_data(session())
+# def create_database(load_fake_data: bool=True):
+#     create_db()
+#     if load_fake_data:
+#         _load_fake_data(session())
