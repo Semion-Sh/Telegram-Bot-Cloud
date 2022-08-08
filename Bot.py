@@ -5,7 +5,8 @@ from Handlers import Client, Other, Admin
 import asyncio
 from Handlers.Other import spam_start
 from Handlers.Other import bot_commands
-from DateBase.DATABASE import DATABASE_NAME, create_database, create_db
+from DateBase.DATABASE import DATABASE_NAME, create_db
+# create_database
 from DateBase import DATABASE
 import os
 from Handlers.Client import data_null

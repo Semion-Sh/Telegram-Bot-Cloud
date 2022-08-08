@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, MetaData, Column, String, Integer
 from faker import Faker
 import os
 
+
 Base = declarative_base()
 meta = MetaData()
 DATABASE_NAME = 'profiles.db'
