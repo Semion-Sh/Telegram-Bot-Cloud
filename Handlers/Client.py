@@ -80,14 +80,15 @@ Send "Yes" to start''')
     elif s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
         await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
     else:
-        await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water. To meet the norm per day, you need {8 - s.query(Water).get(message.from_user.id).glass_of_water_today} more', reply_markup=water_kb)
+        await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water', reply_markup=water_kb)
 
+# {8 - s.query(Water).get(message.from_user.id).glass_of_water_today}
 
 async def status_water(message: types.Message, state: FSMContext):
         if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
             await bot.send_message(message.from_user.id, '''How to use:
-You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to press /AddOne''', reply_markup=main_kb )
-            water = Water(id=message.from_user.id, users_id=message.from_user.id)
+You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to press /AddOne''', reply_markup=water_kb )
+            water = Water(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
             s.add(water)
             s.commit()
             s.close()
@@ -101,7 +102,7 @@ async def AddOne(message: types.Message):
     if s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
         await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
     else: await bot.send_message(message.from_user.id,
-                           f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water. To meet the norm per day, you need {8 - s.query(Water).get(message.from_user.id).glass_of_water_today} more',
+                           f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water out of 8',
                            reply_markup=water_kb)
 
 
@@ -126,9 +127,9 @@ async def workout_w(message: types.Message, state: FSMContext):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await FSMworkout.start.set()
         await message.answer('''Write to me how much you did Push ups, Bars, Pull ups, I will add it to workout for the day
-Send "Yes" to start''', reply_markup=workout_kb)
+Send "Yes" to start''', reply_markup=main_kb)
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'For this you need to register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
     else:
         await bot.send_message(message.from_user.id, f'Choose an exercise category:', reply_markup=workout_kb)
 
@@ -136,9 +137,8 @@ Send "Yes" to start''', reply_markup=workout_kb)
 async def status_workout(message: types.Message, state: FSMContext):
     if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
         await bot.send_message(message.from_user.id, '''How to use:
-You need to go to /PROFILE, then press /WORKOUT. 
-To add push-ups, click /PUSH-UPS and enter the number of pushups you did''', reply_markup=main_kb)
-        workout = Workout(id=message.from_user.id, users_id=message.from_user.id)
+You need to go to /PROFILE, then press /WORKOUT and choose a category''', reply_markup=main_kb)
+        workout = Workout(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
         s.add(workout)
         s.commit()
         s.close()
@@ -149,7 +149,7 @@ async def push_ups(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'For this you need to register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups', reply_markup=push_ups_kb)
 
@@ -161,6 +161,7 @@ async def Add_push_ups(message: types.Message):
 
 async def save_push_ups(message: types.Message,  state: FSMContext):
     s.query(Workout).get(message.from_user.id).push_ups_today += int(message.text)
+    s.query(Workout).get(message.from_user.id).push_ups_all += int(message.text)
     s.commit()
     s.close()
     await state.finish()
@@ -174,7 +175,7 @@ async def bars(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'For this you need to register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars', reply_markup=bars_kb)
 
@@ -186,6 +187,7 @@ async def Add_bars(message: types.Message):
 
 async def save_bars(message: types.Message,  state: FSMContext):
     s.query(Workout).get(message.from_user.id).bars_today += int(message.text)
+    s.query(Workout).get(message.from_user.id).bars_all += int(message.text)
     s.commit()
     s.close()
     await state.finish()
@@ -199,7 +201,7 @@ async def pull_ups(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pullups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'For this you need to register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups', reply_markup=pull_ups_kb)
 
@@ -211,6 +213,7 @@ async def add_pull_ups(message: types.Message):
 
 async def save_pull_ups(message: types.Message,  state: FSMContext):
     s.query(Workout).get(message.from_user.id).pull_ups_today += int(message.text)
+    s.query(Workout).get(message.from_user.id).pull_ups_all += int(message.text)
     s.commit()
     s.close()
     await state.finish()
@@ -247,6 +250,13 @@ async def data_null():
         await aioschedule.run_pending()
         await asyncio.sleep(1)
 
+async def all_ex(message: types.Message):
+    await bot.send_message(message.from_user.id,
+                           f'''Push ups: {s.query(Workout).get(message.from_user.id).push_ups_all}
+Bars: {s.query(Workout).get(message.from_user.id).bars_all}
+Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
+                           reply_markup=profile_kb)
+
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(profile, commands=['Registration'])
@@ -272,6 +282,8 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(pull_ups, commands=['pull_ups'])
     dp.register_message_handler(add_pull_ups, commands=['AddPullUps'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
+
+    dp.register_message_handler(all_ex, commands=['all'])
 
     dp.register_message_handler(boys, commands=['boys'])
     dp.register_message_handler(creator, commands=['admin'])
