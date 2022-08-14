@@ -60,6 +60,7 @@ async def commands_help(message: types.Message):
 /Profile - ваш профиль
 /Admin - профиль создателя Бота
 /Water - контроль потребления воды
+/Workout - физические упражнения
                                                     ''')
 
 
@@ -131,7 +132,12 @@ Send "Yes" to start''', reply_markup=main_kb)
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
         await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
     else:
-        await bot.send_message(message.from_user.id, f'Choose an exercise category:', reply_markup=workout_kb)
+        await bot.send_message(message.from_user.id,
+                               f'''Today you did
+Push ups: {s.query(Workout).get(message.from_user.id).push_ups_today}
+Bars: {s.query(Workout).get(message.from_user.id).bars_today}
+Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_today}''',
+                               reply_markup=workout_kb)
 
 
 async def status_workout(message: types.Message, state: FSMContext):
@@ -251,8 +257,9 @@ async def data_null():
         await asyncio.sleep(1)
 
 async def all_ex(message: types.Message):
-    await bot.send_message(message.from_user.id,
-                           f'''Push ups: {s.query(Workout).get(message.from_user.id).push_ups_all}
+    await bot.send_message(message.from_user.id, f'''
+                           All the time you did
+Push ups: {s.query(Workout).get(message.from_user.id).push_ups_all}
 Bars: {s.query(Workout).get(message.from_user.id).bars_all}
 Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
                            reply_markup=profile_kb)
