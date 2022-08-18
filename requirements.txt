@@ -3,3 +3,4 @@ asyncio
 aioschedule
 sqlalchemy
 faker
+psycopg2
