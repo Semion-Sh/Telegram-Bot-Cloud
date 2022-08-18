@@ -181,7 +181,6 @@ async def save_push_ups(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).push_ups_all += int(message.text)
         s.commit()
         s.close()
-        await state.finish()
         await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups',
                                reply_markup=push_ups_kb)
@@ -189,6 +188,7 @@ async def save_push_ups(message: types.Message,  state: FSMContext):
         await bot.send_message(message.from_user.id,
                                f'Pushups have not been added',
                                reply_markup=push_ups_kb)
+    await state.finish()
 # -------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -212,7 +212,6 @@ async def save_bars(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).bars_all += int(message.text)
         s.commit()
         s.close()
-        await state.finish()
         await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars',
                                reply_markup=bars_kb)
@@ -220,6 +219,7 @@ async def save_bars(message: types.Message,  state: FSMContext):
         await bot.send_message(message.from_user.id,
                                f'Bars have not been added',
                                reply_markup=bars_kb)
+    await state.finish()
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -243,7 +243,6 @@ async def save_pull_ups(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).pull_ups_all += int(message.text)
         s.commit()
         s.close()
-        await state.finish()
         await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups',
                                reply_markup=pull_ups_kb)
@@ -251,7 +250,7 @@ async def save_pull_ups(message: types.Message,  state: FSMContext):
         await bot.send_message(message.from_user.id,
                                f'Pullups have not been added',
                                reply_markup=pull_ups_kb)
-
+    await state.finish()
 
 # ------------------------------------------------------------------------------------------------------------------------------
 async def boys(message: types.Message):
