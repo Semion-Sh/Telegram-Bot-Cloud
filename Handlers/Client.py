@@ -13,13 +13,13 @@ from aiogram.dispatcher import Dispatcher
 import sqlalchemy
 import psycopg2
 from sqlalchemy import create_engine
-from DateBase.DATABASE import engine
+
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
 cur = conn.cursor()
 print("Database opened successfully")
 
-# engine = create_engine("postgresql+psycopg2://tcaxbxkflmhevo:90223b7a16f2f49eaf1ac99f16723bd6c12338098988fcc233082e1ed4c58fc7@ec2-54-86-106-48.compute-1.amazonaws.com/dcojkrta6k2u9r")
+engine = create_engine("postgresql+psycopg2://gvaoqrlriwfoad:055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54@ec2-52-207-15-147.compute-1.amazonaws.com/dcl69hnioedc5p")
 engine.connect()
 
 s = session()
