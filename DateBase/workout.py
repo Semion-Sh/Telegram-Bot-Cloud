@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from DateBase.DATABASE import Base, engine
-from sqlalchemy.orm import relationship
 
 
 class Workout(Base):

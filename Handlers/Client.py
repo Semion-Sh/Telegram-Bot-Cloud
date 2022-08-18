@@ -10,7 +10,17 @@ from DateBase.workout import Workout
 from DateBase.DATABASE import session
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
+import sqlalchemy
+import psycopg2
+from sqlalchemy import create_engine
 
+
+conn = psycopg2.connect(host="ec2-54-86-106-48.compute-1.amazonaws.com", port=5432, database="dcojkrta6k2u9r", user="tcaxbxkflmhevo", password="90223b7a16f2f49eaf1ac99f16723bd6c12338098988fcc233082e1ed4c58fc7")
+cur = conn.cursor()
+print("Database opened successfully")
+
+engine = create_engine("postgresql+psycopg2://tcaxbxkflmhevo:90223b7a16f2f49eaf1ac99f16723bd6c12338098988fcc233082e1ed4c58fc7@ec2-54-86-106-48.compute-1.amazonaws.com/dcojkrta6k2u9r")
+engine.connect()
 
 s = session()
 
@@ -239,7 +249,7 @@ async def creator(message: types.Message):
         await message.delete()
 
 
-async def ok():
+async def remove_today_data():
     for i in s.query(Water).all():
         s.query(Water).get(i.id).glass_of_water_today = 0
     for i in s.query(Workout).all():
@@ -251,10 +261,11 @@ async def ok():
 
 
 async def data_null():
-    aioschedule.every(1).day.at('21:00').do(ok)
+    aioschedule.every(1).day.at('21:00').do(remove_today_data)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
+
 
 async def all_ex(message: types.Message):
     await bot.send_message(message.from_user.id, f'''

@@ -5,7 +5,6 @@ from Handlers import Client, Other, Admin
 import asyncio
 from Handlers.Other import spam_start
 from Handlers.Other import bot_commands
-from DateBase.DATABASE import DATABASE_NAME, create_db
 from DateBase import DATABASE
 import os
 from Handlers.Client import data_null
@@ -13,11 +12,11 @@ from Handlers.Client import data_null
 
 async def start_bot(_):
     print('Bot is starting')
-    print(os.path.exists(DATABASE_NAME))
     SqlLiteDb.sql_start()
     asyncio.create_task(spam_start())
     asyncio.create_task(data_null())
     await bot.set_my_commands(bot_commands)
+
 
 Client.register_handlers_client(dp)
 Other.register_handlers_other(dp)
