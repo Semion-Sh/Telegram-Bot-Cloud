@@ -1,5 +1,4 @@
 from create_bot import dp, bot
-from DateBase import SqlLiteDb
 from aiogram.utils import executor
 from Handlers import Client, Other, Admin
 import asyncio
@@ -11,7 +10,6 @@ from Handlers.Client import data_null
 
 
 async def start_bot(_):
-    SqlLiteDb.sql_start()
     asyncio.create_task(spam_start())
     asyncio.create_task(data_null())
     await bot.set_my_commands(bot_commands)
@@ -19,7 +17,7 @@ async def start_bot(_):
 
 Client.register_handlers_client(dp)
 Other.register_handlers_other(dp)
-Admin.register_handlers_admin(dp)
+# Admin.register_handlers_admin(dp)
 
 
 if __name__ == '__main__':

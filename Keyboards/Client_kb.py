@@ -3,17 +3,18 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 b1 = KeyboardButton('/Profile')
 b2 = KeyboardButton('/Help')
-b4 = KeyboardButton('где я', request_location=True)
 b5 = KeyboardButton('/Registration')
 b6 = KeyboardButton('/Water')
 b7 = KeyboardButton('/Workout')
-b8 = KeyboardButton('/AddOne')
+b8 = KeyboardButton('/Add')
 b9 = KeyboardButton('/Push_ups')
 b10 = KeyboardButton('/Bars')
 b11 = KeyboardButton('/Pull_ups')
 b12 = KeyboardButton('/AddPushUps')
 b13 = KeyboardButton('/AddBars')
 b14 = KeyboardButton('/AddPullUps')
+b15 = KeyboardButton('Русский')
+b16 = KeyboardButton('English')
 
 
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
@@ -25,3 +26,4 @@ workout_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).a
 push_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b12, b7)
 bars_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b13, b7)
 pull_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b14, b7)
+language_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b16, b15)

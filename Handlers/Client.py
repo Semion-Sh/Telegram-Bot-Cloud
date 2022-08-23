@@ -1,9 +1,9 @@
 import asyncio, aioschedule
-from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, unregistered_user_kb_reg, workout_kb, push_ups_kb, bars_kb, pull_ups_kb
+from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, unregistered_user_kb_reg, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+main_kb_ru, unregistered_user_kb_ru, unregistered_user_kb_reg_ru, profile_kb_ru, water_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
-from DateBase import SqlLiteDb
 from DateBase.users import Users
 from DateBase.water import Water
 from DateBase.workout import Workout
@@ -26,33 +26,31 @@ s = session()
 
 
 class FSMregistr(StatesGroup):
+    language_ = State()
     Nickname = State()
 
 
-# start download or show profile
-async def profile(message: types.Message):
-    if message.chat.type == 'private':
-        if s.query(Users.id).filter(Users.id == message.from_user.id).first():
-            await bot.send_message(message.from_user.id, 'Choose a category:', reply_markup=profile_kb)
-        else:
-            await FSMregistr.Nickname.set()
-            await message.answer('Enter your Name')
+class FSMwater(StatesGroup):
+    start = State()
 
 
-async def add_nickname(message: types.Message, state: FSMContext):
-    id = message.from_user.id
-    nick = message.text
-    if message.from_user.username != None:
-        tg_username = '@' + message.from_user.username
-    else: tg_username = 'There is not'
-    user = Users(id=id, nick=nick, tg_username=tg_username)
-    await bot.send_message(message.from_user.id, 'Registration completed', reply_markup=main_kb)
-    await state.finish()
-    s.add(user)
-    s.commit()
-    s.close()
+class FSMworkout(StatesGroup):
+    start = State()
 
 
+class FSMpush_ups(StatesGroup):
+    push_ups = State()
+
+
+class FSMbars(StatesGroup):
+    bars = State()
+
+
+class FSMpull_ups(StatesGroup):
+    pull_ups = State()
+
+
+language = ''
 async def commands_start(message: types.Message):
     if message.chat.type == 'private':
         if s.query(Users.id).filter(Users.id == message.from_user.id).first():
@@ -61,44 +59,108 @@ async def commands_start(message: types.Message):
             except:
                 await message.reply('Чтобы я смог с тобой общаться, напиши мне: https://web.telegram.org/z/#5258746451')
         else:
-            await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}', reply_markup=unregistered_user_kb)
+            await FSMregistr.language_.set()
+            await bot.send_message(message.from_user.id, f'Choose language | Выберите язык', reply_markup=language_kb)
+
+
+async def choose_language(message: types.Message, state: FSMContext):
+    global language
+    if message.text in ['Russian', 'Русский']:
+        language = 'Russian'
+        await bot.send_message(message.from_user.id, f'Привет, {message.from_user.first_name}',
+                                reply_markup=unregistered_user_kb_ru)
+    elif message.text in ['English', 'Английский']:
+        language = 'English'
+        await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}',
+                                reply_markup=unregistered_user_kb)
+    await FSMregistr.next()
+    if language == 'English':
+        await message.answer('Write your Name')
+    elif language == 'Russian':
+        await message.answer('Напишите ваше Имя')
+
+
+async def add_nickname(message: types.Message, state: FSMContext):
+    id = message.from_user.id
+    nick = message.text
+    if message.from_user.username != None:
+        tg_username = '@' + message.from_user.username
+    else: tg_username = 'Not'
+    if language == 'English':
+        user = Users(id=id, nick=nick, tg_username=tg_username, language='English')
+        await bot.send_message(message.from_user.id, 'Registration completed', reply_markup=main_kb)
+    elif language == 'Russian':
+        user = Users(id=id, nick=nick, tg_username=tg_username, language='Russian')
+        await bot.send_message(message.from_user.id, 'Регистрация завершена', reply_markup=main_kb_ru)
+    await state.finish()
+    s.add(user)
+    s.commit()
+    s.close()
+
+
+async def profile(message: types.Message, state: FSMContext):
+    global language
+    if s.query(Users.id).filter(Users.id == message.from_user.id).first() and language == 'English':
+        await bot.send_message(message.from_user.id, 'Choose a category:', reply_markup=profile_kb)
+    elif s.query(Users.id).filter(Users.id == message.from_user.id).first() and language == 'Russian':
+        await bot.send_message(message.from_user.id, 'Выбери категорию:', reply_markup=profile_kb_ru)
 
 
 async def commands_help(message: types.Message):
-    await bot.send_message(message.from_user.id, '''
-    Список команд:
+    if s.query(Users).get(message.from_user.id).language == 'Russian':
+        await bot.send_message(message.from_user.id, '''
+        Список команд:
 /Profile - ваш профиль
 /Admin - профиль создателя Бота
 /Water - контроль потребления воды
-/Workout - физические упражнения
-                                                    ''')
-
-
-class FSMwater(StatesGroup):
-    start = State()
+/Workout - физические упражнения''')
+    elif s.query(Users).get(message.from_user.id).language == 'English':
+        await bot.send_message(message.from_user.id, '''
+        Command List:
+/Profile - your profile
+/Admin - Bot creator profile
+/Water - water consumption control
+/Workout - exercise''')
 
 
 async def water(message: types.Message, state: FSMContext):
-    if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
+    if s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
         await FSMwater.start.set()
         await message.answer('''Я могу контролировать потребление воды каждый день
 Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
-Send "Yes" to start''')
-    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
+Напиши ДА если согласен(а)''')
+    elif s.query(Users).get(message.from_user.id).language == 'Russian' and not s.query(Users.id).filter(Users.id == message.from_user.id).first():
         await bot.send_message(message.from_user.id, '''Я могу контролировать потребление воды каждый день
 Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
-Для этого вам нужно зарегистрироваться''', reply_markup=unregistered_user_kb_reg)
-    elif s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+Для этого вам нужно зарегистрироваться''', reply_markup=unregistered_user_kb_reg_ru)
+    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
+        await FSMwater.start.set()
+        await message.answer('''I can control your water intake every day
+No spam, you yourself write when you have drunk a glass of water.
+Write YES if you agree''')
+    elif s.query(Users).get(message.from_user.id).language == 'English' and not s.query(Users.id).filter(
+            Users.id == message.from_user.id).first():
+        await bot.send_message(message.from_user.id, '''I can control your water intake every day
+No spam, you yourself write when you have drunk a glass of water.
+    For this you need to register''', reply_markup=unregistered_user_kb_reg_ru)
+    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
         await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
-    else:
+    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
         await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water', reply_markup=water_kb)
+    elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+        await bot.send_message(message.from_user.id, f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов на сегодня', reply_markup=main_kb_ru)
+    elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
+        await bot.send_message(message.from_user.id, f'Сегодня ты выпил(а) - {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов воды', reply_markup=water_kb_ru)
 
-# {8 - s.query(Water).get(message.from_user.id).glass_of_water_today}
 
 async def status_water(message: types.Message, state: FSMContext):
         if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
-            await bot.send_message(message.from_user.id, '''How to use:
+            if s.query(Users).get(message.from_user.id).language == 'English':
+                await bot.send_message(message.from_user.id, '''How to use:
 You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to press /AddOne''', reply_markup=water_kb )
+            elif s.query(Users).get(message.from_user.id).language == 'Russian':
+                await bot.send_message(message.from_user.id, '''Как использовать:
+Вам нужно перейти в /ПРОФИЛЬ, затем нажать /ВОДА. Чтобы добавить выпитый стакан, нужно нажать /ДОБАВИТЬ''', reply_markup=water_kb_ru)
             water = Water(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
             s.add(water)
             s.commit()
@@ -115,23 +177,6 @@ async def AddOne(message: types.Message):
     else: await bot.send_message(message.from_user.id,
                            f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water out of 8',
                            reply_markup=water_kb)
-
-
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------
-class FSMworkout(StatesGroup):
-    start = State()
-
-
-class FSMpush_ups(StatesGroup):
-    push_ups = State()
-
-
-class FSMbars(StatesGroup):
-    bars = State()
-
-
-class FSMpull_ups(StatesGroup):
-    pull_ups = State()
 
 
 async def workout_w(message: types.Message, state: FSMContext):
@@ -189,7 +234,6 @@ async def save_push_ups(message: types.Message,  state: FSMContext):
                                f'Pushups have not been added',
                                reply_markup=push_ups_kb)
     await state.finish()
-# -------------------------------------------------------------------------------------------------------------------------------
 
 
 async def bars(message: types.Message):
@@ -220,7 +264,6 @@ async def save_bars(message: types.Message,  state: FSMContext):
                                f'Bars have not been added',
                                reply_markup=bars_kb)
     await state.finish()
-# -----------------------------------------------------------------------------------------------------------------------------
 
 
 async def pull_ups(message: types.Message):
@@ -252,13 +295,9 @@ async def save_pull_ups(message: types.Message,  state: FSMContext):
                                reply_markup=pull_ups_kb)
     await state.finish()
 
-# ------------------------------------------------------------------------------------------------------------------------------
-async def boys(message: types.Message):
-    await SqlLiteDb.sql_read(message)
-
 
 async def creator(message: types.Message):
-    await bot.send_message(message.from_user.id, 'Admin: @sem4ek')
+    await bot.send_message(message.from_user.id, '@sem4ek')
     if message.chat.type != 'private':
         await message.delete()
 
@@ -291,31 +330,29 @@ Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
 
 
 def register_handlers_client(dp: Dispatcher):
-    dp.register_message_handler(profile, commands=['Registration'])
-    dp.register_message_handler(profile, commands=['profile'], state=None)
+    dp.register_message_handler(commands_start, commands=['start'], state=None)
+    dp.register_message_handler(choose_language, state=FSMregistr.language_)
     dp.register_message_handler(add_nickname, state=FSMregistr.Nickname)
-    dp.register_message_handler(commands_start, commands=['start'])
-    dp.register_message_handler(commands_help, commands=['Help'])
-    dp.register_message_handler(water, commands=['water'], state=None)
-    dp.register_message_handler(status_water, state=FSMwater.start)
-    dp.register_message_handler(AddOne, commands=['AddOne'])
+    dp.register_message_handler(profile, commands=['profile', 'Профиль'], state=None)
+    dp.register_message_handler(commands_help, commands=['Help', 'Помощь'])
 
-    dp.register_message_handler(workout_w, commands=['workout'], state=None)
+    dp.register_message_handler(water, commands=['water', 'Вода'], state=None)
+    dp.register_message_handler(status_water, state=FSMwater.start)
+    dp.register_message_handler(AddOne, commands=['Add', 'Добавить'])
+    dp.register_message_handler(workout_w, commands=['Workout', 'Воркаут'], state=None)
     dp.register_message_handler(status_workout, state=FSMworkout.start)
 
-    dp.register_message_handler(push_ups, commands=['push_ups'])
-    dp.register_message_handler(Add_push_ups, commands=['AddPushUps'], state=None)
+    dp.register_message_handler(push_ups, commands=['Push_ups', 'Отжимания'])
+    dp.register_message_handler(Add_push_ups, commands=['AddPushUps', 'ДобавитьОтжимания'], state=None)
     dp.register_message_handler(save_push_ups, state=FSMpush_ups.push_ups)
 
-    dp.register_message_handler(bars, commands=['Bars'])
-    dp.register_message_handler(Add_bars, commands=['AddBars'], state=None)
+    dp.register_message_handler(bars, commands=['Bars', 'Брусья'])
+    dp.register_message_handler(Add_bars, commands=['AddBars', 'ДобавитьБрусья'], state=None)
     dp.register_message_handler(save_bars, state=FSMbars.bars)
 
-    dp.register_message_handler(pull_ups, commands=['pull_ups'])
-    dp.register_message_handler(add_pull_ups, commands=['AddPullUps'], state=None)
+    dp.register_message_handler(pull_ups, commands=['pull_ups', 'Подтягивания'])
+    dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'ДобавитьПодтягивания'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
     dp.register_message_handler(all_ex, commands=['all'])
-
-    dp.register_message_handler(boys, commands=['boys'])
     dp.register_message_handler(creator, commands=['admin'])
