@@ -1,6 +1,6 @@
 import asyncio, aioschedule
-from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, unregistered_user_kb_reg, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
-main_kb_ru, unregistered_user_kb_ru, unregistered_user_kb_reg_ru, profile_kb_ru, water_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
+from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+main_kb_ru, unregistered_user_kb_ru, profile_kb_ru, water_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
@@ -13,6 +13,7 @@ from aiogram.dispatcher import Dispatcher
 import sqlalchemy
 import psycopg2
 from sqlalchemy import create_engine
+from aiogram.dispatcher.filters import CommandStart, CommandHelp
 
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
@@ -27,15 +28,6 @@ s = session()
 
 class FSMregistr(StatesGroup):
     language_ = State()
-    Nickname = State()
-
-
-class FSMwater(StatesGroup):
-    start = State()
-
-
-class FSMworkout(StatesGroup):
-    start = State()
 
 
 class FSMpush_ups(StatesGroup):
@@ -51,6 +43,8 @@ class FSMpull_ups(StatesGroup):
 
 
 language = ''
+
+
 async def commands_start(message: types.Message):
     if message.chat.type == 'private':
         if s.query(Users.id).filter(Users.id == message.from_user.id).first():
@@ -73,37 +67,25 @@ async def choose_language(message: types.Message, state: FSMContext):
         language = 'English'
         await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}',
                                 reply_markup=unregistered_user_kb)
-    await FSMregistr.next()
-    if language == 'English':
-        await message.answer('Write your Name')
-    elif language == 'Russian':
-        await message.answer('Напишите ваше Имя')
-
-
-async def add_nickname(message: types.Message, state: FSMContext):
     id = message.from_user.id
-    nick = message.text
     if message.from_user.username != None:
         tg_username = '@' + message.from_user.username
     else: tg_username = 'Not'
     if language == 'English':
-        user = Users(id=id, nick=nick, tg_username=tg_username, language='English')
-        await bot.send_message(message.from_user.id, 'Registration completed', reply_markup=main_kb)
+        user = Users(id=id, tg_username=tg_username, language='English')
     elif language == 'Russian':
-        user = Users(id=id, nick=nick, tg_username=tg_username, language='Russian')
-        await bot.send_message(message.from_user.id, 'Регистрация завершена', reply_markup=main_kb_ru)
+        user = Users(id=id, tg_username=tg_username, language='Russian')
     await state.finish()
     s.add(user)
     s.commit()
     s.close()
 
 
-async def profile(message: types.Message, state: FSMContext):
-    global language
-    if s.query(Users.id).filter(Users.id == message.from_user.id).first() and language == 'English':
-        await bot.send_message(message.from_user.id, 'Choose a category:', reply_markup=profile_kb)
-    elif s.query(Users.id).filter(Users.id == message.from_user.id).first() and language == 'Russian':
-        await bot.send_message(message.from_user.id, 'Выбери категорию:', reply_markup=profile_kb_ru)
+async def profile(message: types.Message):
+    if s.query(Users.id).filter(Users.id == message.from_user.id).first() and s.query(Users).get(message.from_user.id).language == 'English':
+        await bot.send_message(message.from_user.id, '-', reply_markup=profile_kb)
+    elif s.query(Users.id).filter(Users.id == message.from_user.id).first() and s.query(Users).get(message.from_user.id).language == 'Russian':
+        await bot.send_message(message.from_user.id, '-', reply_markup=profile_kb_ru)
 
 
 async def commands_help(message: types.Message):
@@ -123,49 +105,28 @@ async def commands_help(message: types.Message):
 /Workout - exercise''')
 
 
-async def water(message: types.Message, state: FSMContext):
-    if s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
-        await FSMwater.start.set()
-        await message.answer('''Я могу контролировать потребление воды каждый день
-Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
-Напиши ДА если согласен(а)''')
-    elif s.query(Users).get(message.from_user.id).language == 'Russian' and not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, '''Я могу контролировать потребление воды каждый день
-Никакого спама, ты сам(а) пишешь когда выпил(а) стакан воды.
-Для этого вам нужно зарегистрироваться''', reply_markup=unregistered_user_kb_reg_ru)
-    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Water.users_id).filter(Water.users_id == message.from_user.id).first():
-        await FSMwater.start.set()
-        await message.answer('''I can control your water intake every day
-No spam, you yourself write when you have drunk a glass of water.
-Write YES if you agree''')
-    elif s.query(Users).get(message.from_user.id).language == 'English' and not s.query(Users.id).filter(
-            Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, '''I can control your water intake every day
-No spam, you yourself write when you have drunk a glass of water.
-    For this you need to register''', reply_markup=unregistered_user_kb_reg_ru)
-    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-        await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
-    elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
-        await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water', reply_markup=water_kb)
-    elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-        await bot.send_message(message.from_user.id, f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов на сегодня', reply_markup=main_kb_ru)
-    elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
-        await bot.send_message(message.from_user.id, f'Сегодня ты выпил(а) - {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов воды', reply_markup=water_kb_ru)
-
-
-async def status_water(message: types.Message, state: FSMContext):
-        if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
-            if s.query(Users).get(message.from_user.id).language == 'English':
-                await bot.send_message(message.from_user.id, '''How to use:
-You need to go to /PROFILE, then press /WATER. To add a drunk glass, you need to press /AddOne''', reply_markup=water_kb )
-            elif s.query(Users).get(message.from_user.id).language == 'Russian':
-                await bot.send_message(message.from_user.id, '''Как использовать:
-Вам нужно перейти в /ПРОФИЛЬ, затем нажать /ВОДА. Чтобы добавить выпитый стакан, нужно нажать /ДОБАВИТЬ''', reply_markup=water_kb_ru)
-            water = Water(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
-            s.add(water)
-            s.commit()
-            s.close()
-        await state.finish()
+async def water(message: types.Message):
+    if not s.query(Water.id).filter(Users.id == message.from_user.id).first():
+        water_model = Water(id=message.from_user.id, tg_name='@' + message.from_user.username, users_id=message.from_user.id)
+        s.add(water_model)
+        s.commit()
+        s.close()
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water',
+                                   reply_markup=water_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов',
+                                   reply_markup=water_kb_ru)
+    else:
+        if s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+            await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses', reply_markup=main_kb)
+        elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
+            await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water', reply_markup=water_kb)
+        elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
+            await bot.send_message(message.from_user.id, f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов', reply_markup=main_kb_ru)
+        elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
+            await bot.send_message(message.from_user.id, f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов', reply_markup=water_kb_ru)
 
 
 async def AddOne(message: types.Message):
@@ -173,44 +134,56 @@ async def AddOne(message: types.Message):
     s.commit()
     s.close()
     if s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-        await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
-    else: await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
+        elif s.query(Users).get(message.from_user.id).language == 'Russian':
+            await bot.send_message(message.from_user.id,
+                                   f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов',
+                                   reply_markup=main_kb_ru)
+    else:
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                            f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water out of 8',
                            reply_markup=water_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов',
+                                   reply_markup=water_kb_ru)
 
 
-async def workout_w(message: types.Message, state: FSMContext):
-    if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
-        await FSMworkout.start.set()
-        await message.answer('''Write to me how much you did Push ups, Bars, Pull ups, I will add it to workout for the day
-Send "Yes" to start''', reply_markup=main_kb)
-    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
-    else:
-        await bot.send_message(message.from_user.id,
-                               f'''Today you did
-Push ups: {s.query(Workout).get(message.from_user.id).push_ups_today}
-Bars: {s.query(Workout).get(message.from_user.id).bars_today}
-Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_today}''',
-                               reply_markup=workout_kb)
-
-
-async def status_workout(message: types.Message, state: FSMContext):
-    if message.text.lower() in ['"yes"', "'yes'", 'yes', 'да', '"да"', "'да'", '"da"', "'da'", 'da']:
-        await bot.send_message(message.from_user.id, '''How to use:
-You need to go to /PROFILE, then press /WORKOUT and choose a category''', reply_markup=main_kb)
+async def workout_w(message: types.Message):
+    if not s.query(Workout.id).filter(Users.id == message.from_user.id).first():
         workout = Workout(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
         s.add(workout)
         s.commit()
         s.close()
-    await state.finish()
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb)
+        else:
+            await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb_ru)
+    else:
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb)
+        else:
+            await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb_ru)
+         # await bot.send_message(message.from_user.id,
+#                                f'''Today you did
+# Push ups: {s.query(Workout).get(message.from_user.id).push_ups_today}
+# Bars: {s.query(Workout).get(message.from_user.id).bars_today}
+# Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_today}''',
+#                                reply_markup=workout_kb)
+
+
+count = 0
 
 
 async def push_ups(message: types.Message):
+    global count
+    count = s.query(Workout).get(message.from_user.id).pull_ups_today
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register')
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups', reply_markup=push_ups_kb)
 
@@ -240,7 +213,7 @@ async def bars(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register')
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars', reply_markup=bars_kb)
 
@@ -270,7 +243,7 @@ async def pull_ups(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pullups for the day')
     elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register', reply_markup=unregistered_user_kb_reg)
+        await bot.send_message(message.from_user.id, 'Please register')
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups', reply_markup=pull_ups_kb)
 
@@ -330,19 +303,16 @@ Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
 
 
 def register_handlers_client(dp: Dispatcher):
-    dp.register_message_handler(commands_start, commands=['start'], state=None)
+    dp.register_message_handler(commands_start, CommandStart(), state=None)
     dp.register_message_handler(choose_language, state=FSMregistr.language_)
-    dp.register_message_handler(add_nickname, state=FSMregistr.Nickname)
-    dp.register_message_handler(profile, commands=['profile', 'Профиль'], state=None)
+    dp.register_message_handler(profile, commands=['profile', 'Профиль'])
     dp.register_message_handler(commands_help, commands=['Help', 'Помощь'])
 
-    dp.register_message_handler(water, commands=['water', 'Вода'], state=None)
-    dp.register_message_handler(status_water, state=FSMwater.start)
+    dp.register_message_handler(water, commands=['water', 'Вода'])
     dp.register_message_handler(AddOne, commands=['Add', 'Добавить'])
-    dp.register_message_handler(workout_w, commands=['Workout', 'Воркаут'], state=None)
-    dp.register_message_handler(status_workout, state=FSMworkout.start)
+    dp.register_message_handler(workout_w, commands=['Sport', 'Спорт'])
 
-    dp.register_message_handler(push_ups, commands=['Push_ups', 'Отжимания'])
+    dp.register_message_handler(push_ups, commands=[f'Push_ups', 'Отжимания'])
     dp.register_message_handler(Add_push_ups, commands=['AddPushUps', 'ДобавитьОтжимания'], state=None)
     dp.register_message_handler(save_push_ups, state=FSMpush_ups.push_ups)
 

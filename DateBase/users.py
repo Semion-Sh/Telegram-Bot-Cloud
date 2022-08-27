@@ -6,8 +6,8 @@ class Users(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    nick = Column(String)
     tg_username = Column(String)
     language = Column(String)
+
 
 Base.metadata.create_all(engine)

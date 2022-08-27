@@ -1,13 +1,13 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-
+from Handlers import Client
 
 b1 = KeyboardButton('/Profile')
 b2 = KeyboardButton('/Help')
-b5 = KeyboardButton('/Registration')
+# b5 = KeyboardButton('/Registration')
 b6 = KeyboardButton('/Water')
-b7 = KeyboardButton('/Workout')
+b7 = KeyboardButton('/Sport')
 b8 = KeyboardButton('/Add')
-b9 = KeyboardButton('/Push_ups')
+b9 = KeyboardButton(f'/Push_ups')
 b10 = KeyboardButton('/Bars')
 b11 = KeyboardButton('/Pull_ups')
 b12 = KeyboardButton('/AddPushUps')
@@ -18,8 +18,8 @@ b16 = KeyboardButton('English')
 
 
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
-unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5, b2)
-unregistered_user_kb_reg = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5)
+unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b2)
+# unregistered_user_kb_reg = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5)
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b6, b7)
 water_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b8, b1)
 workout_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b9, b10, b11).add(b1)
