@@ -95,14 +95,14 @@ async def commands_help(message: types.Message):
 /Profile - ваш профиль
 /Admin - профиль создателя Бота
 /Water - контроль потребления воды
-/Workout - физические упражнения''')
+/Sport - отслеживать спортивную активность''')
     elif s.query(Users).get(message.from_user.id).language == 'English':
         await bot.send_message(message.from_user.id, '''
         Command List:
 /Profile - your profile
 /Admin - Bot creator profile
 /Water - water consumption control
-/Workout - exercise''')
+/Sport - track sports activity''')
 
 
 async def water(message: types.Message):
@@ -166,12 +166,6 @@ async def workout_w(message: types.Message):
             await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb)
         else:
             await bot.send_message(message.from_user.id, '-', reply_markup=workout_kb_ru)
-         # await bot.send_message(message.from_user.id,
-#                                f'''Today you did
-# Push ups: {s.query(Workout).get(message.from_user.id).push_ups_today}
-# Bars: {s.query(Workout).get(message.from_user.id).bars_today}
-# Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_today}''',
-#                                reply_markup=workout_kb)
 
 
 count = 0
@@ -182,15 +176,16 @@ async def push_ups(message: types.Message):
     count = s.query(Workout).get(message.from_user.id).pull_ups_today
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
-    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register')
     else:
         await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups', reply_markup=push_ups_kb)
 
 
 async def Add_push_ups(message: types.Message):
     await FSMpush_ups.push_ups.set()
-    await message.answer('Enter the number of pushups:')
+    if s.query(Users).get(message.from_user.id).language == 'English':
+        await message.answer('Enter the number of pushups:')
+    else:
+        await message.answer('Введите количество отжиманий:')
 
 
 async def save_push_ups(message: types.Message,  state: FSMContext):
@@ -199,28 +194,42 @@ async def save_push_ups(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).push_ups_all += int(message.text)
         s.commit()
         s.close()
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups',
                                reply_markup=push_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).push_ups_today} отжиманий',
+                                   reply_markup=push_ups_kb_ru)
     except:
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Pushups have not been added',
                                reply_markup=push_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Отжимания не были добавлены',
+                                   reply_markup=push_ups_kb_ru)
     await state.finish()
 
 
 async def bars(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
-    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register')
     else:
-        await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars', reply_markup=bars_kb)
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars', reply_markup=bars_kb)
+        else:
+            await bot.send_message(message.from_user.id, f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).bars_today} отжиманий на брусьях', reply_markup=bars_kb_ru)
 
 
 async def Add_bars(message: types.Message):
     await FSMbars.bars.set()
-    await message.answer('Enter the number of bars:')
+    if s.query(Users).get(message.from_user.id).language == 'English':
+        await message.answer('Enter the number of bars:')
+    else:
+        await message.answer('Введите количество отжиманий на брусьях:')
 
 
 async def save_bars(message: types.Message,  state: FSMContext):
@@ -229,28 +238,42 @@ async def save_bars(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).bars_all += int(message.text)
         s.commit()
         s.close()
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).bars_today} bars',
                                reply_markup=bars_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                           f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).bars_today} отжиманий на брусьях',
+                           reply_markup=bars_kb_ru)
     except:
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Bars have not been added',
                                reply_markup=bars_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Отжимания не были добавлены',
+                                   reply_markup=bars_kb_ru)
     await state.finish()
 
 
 async def pull_ups(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pullups for the day')
-    elif not s.query(Users.id).filter(Users.id == message.from_user.id).first():
-        await bot.send_message(message.from_user.id, 'Please register')
     else:
-        await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups', reply_markup=pull_ups_kb)
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups', reply_markup=pull_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id, f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).pull_ups_today} подтягиваний', reply_markup=pull_ups_kb_ru)
 
 
 async def add_pull_ups(message: types.Message):
     await FSMpull_ups.pull_ups.set()
-    await message.answer('Enter the number of pullups:')
+    if s.query(Users).get(message.from_user.id).language == 'English':
+        await message.answer('Enter the number of pullups:')
+    else:
+        await message.answer('Введите количество подтягиваний:')
 
 
 async def save_pull_ups(message: types.Message,  state: FSMContext):
@@ -259,13 +282,24 @@ async def save_pull_ups(message: types.Message,  state: FSMContext):
         s.query(Workout).get(message.from_user.id).pull_ups_all += int(message.text)
         s.commit()
         s.close()
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Today you did {s.query(Workout).get(message.from_user.id).pull_ups_today} pullups',
                                reply_markup=pull_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                                   f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).pull_ups_today} подтягиваний',
+                                   reply_markup=pull_ups_kb_ru)
+
     except:
-        await bot.send_message(message.from_user.id,
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id,
                                f'Pullups have not been added',
                                reply_markup=pull_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id,
+                               f'Подтягивания не были добавлены',
+                               reply_markup=pull_ups_kb_ru)
     await state.finish()
 
 
@@ -294,12 +328,20 @@ async def data_null():
 
 
 async def all_ex(message: types.Message):
-    await bot.send_message(message.from_user.id, f'''
+    if s.query(Users).get(message.from_user.id).language == 'English':
+        await bot.send_message(message.from_user.id, f'''
                            All the time you did
 Push ups: {s.query(Workout).get(message.from_user.id).push_ups_all}
 Bars: {s.query(Workout).get(message.from_user.id).bars_all}
 Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
                            reply_markup=profile_kb)
+    else:
+        await bot.send_message(message.from_user.id, f'''
+                                   За всё время ты сделал
+Отжимания: {s.query(Workout).get(message.from_user.id).push_ups_all}
+Брусья: {s.query(Workout).get(message.from_user.id).bars_all}
+Подтягивания: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
+                               reply_markup=profile_kb_ru)
 
 
 def register_handlers_client(dp: Dispatcher):
@@ -324,5 +366,5 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'ДобавитьПодтягивания'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
-    dp.register_message_handler(all_ex, commands=['all'])
+    dp.register_message_handler(all_ex, commands=['statistics', 'статистика'])
     dp.register_message_handler(creator, commands=['admin'])

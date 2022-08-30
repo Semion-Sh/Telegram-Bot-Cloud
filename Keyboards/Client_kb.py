@@ -15,6 +15,7 @@ b13 = KeyboardButton('/AddBars')
 b14 = KeyboardButton('/AddPullUps')
 b15 = KeyboardButton('Русский')
 b16 = KeyboardButton('English')
+b17 = KeyboardButton('/statistics')
 
 
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
@@ -22,7 +23,7 @@ unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboa
 # unregistered_user_kb_reg = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5)
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b6, b7)
 water_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b8, b1)
-workout_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b9, b10, b11).add(b1)
+workout_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b9, b10, b11).add(b17).add(b1)
 push_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b12, b7)
 bars_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b13, b7)
 pull_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b14, b7)
