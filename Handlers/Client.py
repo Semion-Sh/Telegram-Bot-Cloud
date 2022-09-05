@@ -95,14 +95,16 @@ async def commands_help(message: types.Message):
 /Profile - ваш профиль
 /Admin - профиль создателя Бота
 /Water - контроль потребления воды
-/Sport - отслеживать спортивную активность''')
+/Sport - отслеживать спортивную активность
+/Statistics - статистика за весь период''')
     elif s.query(Users).get(message.from_user.id).language == 'English':
         await bot.send_message(message.from_user.id, '''
         Command List:
 /Profile - your profile
 /Admin - Bot creator profile
 /Water - water consumption control
-/Sport - track sports activity''')
+/Sport - track sports activity
+/Statistics - statistics for the entire period''')
 
 
 async def water(message: types.Message):
@@ -363,7 +365,7 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(save_bars, state=FSMbars.bars)
 
     dp.register_message_handler(pull_ups, commands=['pull_ups', 'Подтягивания'])
-    dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'ДобавитьПодтягивания'], state=None)
+    dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'Добавить'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
     dp.register_message_handler(all_ex, commands=['statistics', 'статистика'])

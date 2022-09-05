@@ -13,7 +13,7 @@ b10 = KeyboardButton('/Брусья')
 b11 = KeyboardButton('/Подтягивания')
 b12 = KeyboardButton('/ДобавитьОтжимания')
 b13 = KeyboardButton('/ДобавитьБрусья')
-b14 = KeyboardButton('/ДобавитьПодтягивания')
+b14 = KeyboardButton('/Добавить')
 b17 = KeyboardButton('/статистика')
 
 
