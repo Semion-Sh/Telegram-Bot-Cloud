@@ -108,7 +108,7 @@ async def commands_help(message: types.Message):
 
 
 async def water(message: types.Message):
-    if not s.query(Water.id).filter(Users.id == message.from_user.id).first():
+    if not s.query(Water.id).filter(Water.id == message.from_user.id).first():
         water_model = Water(id=message.from_user.id, tg_name='@' + message.from_user.username, users_id=message.from_user.id)
         s.add(water_model)
         s.commit()
@@ -154,7 +154,7 @@ async def AddOne(message: types.Message):
 
 
 async def workout_w(message: types.Message):
-    if not s.query(Workout.id).filter(Users.id == message.from_user.id).first():
+    if not s.query(Workout.id).filter(Workout.id == message.from_user.id).first():
         workout = Workout(id=message.from_user.id, users_id=message.from_user.id, tg_name='@' + message.from_user.username)
         s.add(workout)
         s.commit()
