@@ -5,7 +5,6 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
 from DateBase.users import Users
-from DateBase.water import Water
 from DateBase.workout import Workout
 from DateBase.DATABASE import session
 from aiogram import types
@@ -105,52 +104,6 @@ async def commands_help(message: types.Message):
 /Water - water consumption control
 /Sport - track sports activity
 /Statistics - statistics for the entire period''')
-
-
-async def water(message: types.Message):
-    if not s.query(Water.id).filter(Water.id == message.from_user.id).first():
-        water_model = Water(id=message.from_user.id, tg_name='@' + message.from_user.username, users_id=message.from_user.id)
-        s.add(water_model)
-        s.commit()
-        s.close()
-        if s.query(Users).get(message.from_user.id).language == 'English':
-            await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water',
-                                   reply_markup=water_kb)
-        else:
-            await bot.send_message(message.from_user.id,
-                                   f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов',
-                                   reply_markup=water_kb_ru)
-    else:
-        if s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-            await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses', reply_markup=main_kb)
-        elif s.query(Users).get(message.from_user.id).language == 'English' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
-            await bot.send_message(message.from_user.id, f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} out of 8 glass of water', reply_markup=water_kb)
-        elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-            await bot.send_message(message.from_user.id, f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов', reply_markup=main_kb_ru)
-        elif s.query(Users).get(message.from_user.id).language == 'Russian' and s.query(Water).get(message.from_user.id).glass_of_water_today < 8:
-            await bot.send_message(message.from_user.id, f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов', reply_markup=water_kb_ru)
-
-
-async def AddOne(message: types.Message):
-    s.query(Water).get(message.from_user.id).glass_of_water_today += 1
-    s.commit()
-    s.close()
-    if s.query(Water).get(message.from_user.id).glass_of_water_today >= 8:
-        if s.query(Users).get(message.from_user.id).language == 'English':
-            await bot.send_message(message.from_user.id, f'You drank all {s.query(Water).get(message.from_user.id).glass_of_water_today} glasses that day', reply_markup=main_kb)
-        elif s.query(Users).get(message.from_user.id).language == 'Russian':
-            await bot.send_message(message.from_user.id,
-                                   f'Ты выпил(а) все {s.query(Water).get(message.from_user.id).glass_of_water_today} стаканов',
-                                   reply_markup=main_kb_ru)
-    else:
-        if s.query(Users).get(message.from_user.id).language == 'English':
-            await bot.send_message(message.from_user.id,
-                           f'Today you drank {s.query(Water).get(message.from_user.id).glass_of_water_today} glass of water out of 8',
-                           reply_markup=water_kb)
-        else:
-            await bot.send_message(message.from_user.id,
-                                   f'Сегодня ты выпил(а) {s.query(Water).get(message.from_user.id).glass_of_water_today} из 8-ми стаканов',
-                                   reply_markup=water_kb_ru)
 
 
 async def workout_w(message: types.Message):
@@ -355,7 +308,6 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(profile, commands=['profile', 'Профиль'])
     dp.register_message_handler(commands_help, commands=['Help', 'Помощь'])
 
-    dp.register_message_handler(water, commands=['water', 'Вода'])
     dp.register_message_handler(AddOne, commands=['Add', 'Добавить'])
     dp.register_message_handler(workout_w, commands=['Sport', 'Спорт'])
 

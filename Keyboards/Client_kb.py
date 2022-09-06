@@ -4,7 +4,7 @@ from Handlers import Client
 b1 = KeyboardButton('/Profile')
 b2 = KeyboardButton('/Help')
 # b5 = KeyboardButton('/Registration')
-b6 = KeyboardButton('/Water')
+b6 = KeyboardButton('/expenses')
 b7 = KeyboardButton('/Sport')
 b8 = KeyboardButton('/Add')
 b9 = KeyboardButton(f'/Push_ups')
