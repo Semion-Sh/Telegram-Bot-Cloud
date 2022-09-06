@@ -268,8 +268,6 @@ async def creator(message: types.Message):
 
 
 async def remove_today_data():
-    for i in s.query(Water).all():
-        s.query(Water).get(i.id).glass_of_water_today = 0
     for i in s.query(Workout).all():
         s.query(Workout).get(i.id).push_ups_today = 0
         s.query(Workout).get(i.id).bars_today = 0
@@ -308,7 +306,6 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(profile, commands=['profile', 'Профиль'])
     dp.register_message_handler(commands_help, commands=['Help', 'Помощь'])
 
-    dp.register_message_handler(AddOne, commands=['Add', 'Добавить'])
     dp.register_message_handler(workout_w, commands=['Sport', 'Спорт'])
 
     dp.register_message_handler(push_ups, commands=[f'Push_ups', 'Отжимания'])
