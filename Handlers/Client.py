@@ -179,7 +179,10 @@ async def push_ups(message: types.Message):
     if s.query(Users.id).filter(Users.id == message.from_user.id).first() and not s.query(Workout.users_id).filter(Workout.users_id == message.from_user.id).first():
         await message.answer('Write to me how much you did push-ups, I will add it to pushups for the day')
     else:
-        await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups', reply_markup=push_ups_kb)
+        if s.query(Users).get(message.from_user.id).language == 'English':
+            await bot.send_message(message.from_user.id, f'Today you did {s.query(Workout).get(message.from_user.id).push_ups_today} push-ups', reply_markup=push_ups_kb)
+        else:
+            await bot.send_message(message.from_user.id, f'Сегодня ты сделал {s.query(Workout).get(message.from_user.id).push_ups_today} отжиманий', reply_markup=push_ups_kb_ru)
 
 
 async def Add_push_ups(message: types.Message):
