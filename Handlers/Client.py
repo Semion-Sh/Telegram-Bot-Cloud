@@ -331,10 +331,10 @@ async def valuta(message: types.Message, state: FSMContext):
     global valuta_var
     if message.text == '/BYN':
         valuta_var = 'BYN'
-        await bot.send_message(message.from_user.id, f'введите сумму в BYN:')
+        await bot.send_message(message.from_user.id, f'ВВЕДИТЕ СУММУ В BYN:')
     elif message.text == '/USD':
         valuta_var = 'USD'
-        await bot.send_message(message.from_user.id, f'введите сумму в USD:')
+        await bot.send_message(message.from_user.id, f'ВВЕДИТЕ СУММУ В USD:')
     else:
         await bot.send_message(message.from_user.id, f'-', reply_markup=profile_kb_ru)
         await state.finish()
@@ -390,9 +390,9 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(commands_start, CommandStart(), state=None)
     dp.register_message_handler(choose_language, state=FSMregistr.language_)
     dp.register_message_handler(profile, commands=['PROFIL', 'ПРОФИЛЬ'])
-    dp.register_message_handler(commands_help, commands=['HELP', 'Помощь'])
+    dp.register_message_handler(commands_help, commands=['HELP', 'ПОМОЩЬ'])
 
-    dp.register_message_handler(workout_w, commands=['Sport', 'Спорт'])
+    dp.register_message_handler(workout_w, commands=['SPORT', 'СПОРТ'])
 
     dp.register_message_handler(push_ups, commands=[f'Push_ups', 'Отжимания'])
     dp.register_message_handler(Add_push_ups, commands=['AddPushUps', 'ДобавитьОтжимания'], state=None)
@@ -406,10 +406,10 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'Добавить'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
-    dp.register_message_handler(all_ex, commands=['statistics', 'статистика'])
+    dp.register_message_handler(all_ex, commands=['STATISTICS', 'СТАТИСТИКА'])
     dp.register_message_handler(creator, commands=['admin'])
 
-    dp.register_message_handler(expenses_def, commands=['expenses', 'РАСХОДЫ'], state=None)
+    dp.register_message_handler(expenses_def, commands=['EXPENSES', 'РАСХОДЫ'], state=None)
     dp.register_message_handler(valuta, state=FSMmoney.valuta_)
     dp.register_message_handler(expenses_save, state=FSMmoney.money)
 

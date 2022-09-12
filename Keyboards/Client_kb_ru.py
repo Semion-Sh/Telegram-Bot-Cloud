@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardBut
 
 
 b1 = KeyboardButton('/ПРОФИЛЬ')
-b2 = KeyboardButton('/Помощь')
+b2 = KeyboardButton('/ПОМОЩЬ')
 b3 = KeyboardButton('где я', request_location=True)
 b6 = KeyboardButton('/РАСХОДЫ')
 b7 = KeyboardButton('/СПОРТ')
@@ -13,7 +13,7 @@ b11 = KeyboardButton('/Подтягивания')
 b12 = KeyboardButton('/ДобавитьОтжимания')
 b13 = KeyboardButton('/ДобавитьБрусья')
 b14 = KeyboardButton('/Добавить')
-b17 = KeyboardButton('/статистика')
+b17 = KeyboardButton('/СТАТИСТИКА')
 inline_btn_1 = InlineKeyboardButton('ПЕРЕВЕСТИ В USD', callback_data='button1')
 inline_btn_2 = InlineKeyboardButton('ПЕРЕВЕСТИ В BYN', callback_data='button2')
 inline_kb1 = InlineKeyboardMarkup().add(inline_btn_1)
