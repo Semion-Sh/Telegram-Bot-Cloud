@@ -1,9 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from Handlers import Client
 
 b1 = KeyboardButton('/PROFIL')
 b2 = KeyboardButton('/HELP')
-# b5 = KeyboardButton('/Registration')
 b6 = KeyboardButton('/expenses')
 b7 = KeyboardButton('/Sport')
 b8 = KeyboardButton('/Add')
@@ -19,13 +17,9 @@ b17 = KeyboardButton('/statistics')
 b18 = KeyboardButton('/BYN')
 b19 = KeyboardButton('/USD')
 
-
-
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
 unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b2)
-# unregistered_user_kb_reg = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b5)
 profile_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b6, b7)
-water_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b8, b1)
 workout_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b9, b10, b11).add(b17).add(b1)
 push_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b12, b7)
 bars_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b13, b7)

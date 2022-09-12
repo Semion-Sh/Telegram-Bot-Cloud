@@ -1,6 +1,6 @@
 import asyncio, aioschedule
-from Keyboards import inline_btn_1, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, water_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
-main_kb_ru, unregistered_user_kb_ru, profile_kb_ru, water_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
+from Keyboards import inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+ unregistered_user_kb_ru, profile_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot, dp
@@ -10,10 +10,9 @@ from DateBase.expenses import Expenses
 from DateBase.DATABASE import session
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
-import sqlalchemy
 import psycopg2
 from sqlalchemy import create_engine
-from aiogram.dispatcher.filters import CommandStart, CommandHelp
+from aiogram.dispatcher.filters import CommandStart
 from myfin import item
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
