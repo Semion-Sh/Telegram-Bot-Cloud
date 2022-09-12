@@ -1,11 +1,12 @@
 import asyncio, aioschedule
-from Keyboards import main_kb, unregistered_user_kb, profile_kb, water_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+from Keyboards import inline_btn_1, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, water_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
 main_kb_ru, unregistered_user_kb_ru, profile_kb_ru, water_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from create_bot import bot
+from create_bot import bot, dp
 from DateBase.users import Users
 from DateBase.workout import Workout
+from DateBase.expenses import Expenses
 from DateBase.DATABASE import session
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
@@ -13,7 +14,7 @@ import sqlalchemy
 import psycopg2
 from sqlalchemy import create_engine
 from aiogram.dispatcher.filters import CommandStart, CommandHelp
-
+from myfin import item
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
 cur = conn.cursor()
@@ -23,6 +24,10 @@ engine = create_engine("postgresql+psycopg2://gvaoqrlriwfoad:055f19b677f01b04111
 engine.connect()
 
 s = session()
+
+
+def toFixed(numObj, digits=2):
+    return f"{numObj:.{digits}f}"
 
 
 class FSMregistr(StatesGroup):
@@ -278,6 +283,8 @@ async def remove_today_data():
 
 async def data_null():
     aioschedule.every(1).day.at('21:00').do(remove_today_data)
+    aioschedule.every(1).day.at('21:00').do(remove_today_finance_data)
+    aioschedule.every(1).monday.at('21:00').do(remove_today_finance_data)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
@@ -300,11 +307,91 @@ Pull ups: {s.query(Workout).get(message.from_user.id).pull_ups_all}''',
                                reply_markup=profile_kb_ru)
 
 
+class FSMmoney(StatesGroup):
+    valuta_ = State()
+    money = State()
+
+
+async def expenses_def(message: types.Message):
+    if not s.query(Expenses.id).filter(Expenses.id == message.from_user.id).first():
+        if message.from_user.username != None:
+            tg_username = '@' + message.from_user.username
+        else:
+            tg_username = 'Not'
+        expenses = Expenses(id=message.from_user.id, tg_username=tg_username, users_id=message.from_user.id)
+        s.add(expenses)
+        s.commit()
+        s.close()
+    await FSMmoney.valuta_.set()
+    await bot.send_message(message.from_user.id, f'ВЫБЕРИТЕ ВАЛЮТУ:', reply_markup=valuta_kb)
+
+valuta_var = None
+
+
+async def valuta(message: types.Message, state: FSMContext):
+    global valuta_var
+    if message.text == '/BYN':
+        valuta_var = 'BYN'
+        await bot.send_message(message.from_user.id, f'введите сумму в BYN:')
+    elif message.text == '/USD':
+        valuta_var = 'USD'
+        await bot.send_message(message.from_user.id, f'введите сумму в USD:')
+    else:
+        await bot.send_message(message.from_user.id, f'-', reply_markup=profile_kb_ru)
+        await state.finish()
+    await FSMmoney.money.set()
+
+
+async def expenses_save(message: types.Message, state: FSMContext):
+    global valuta_var
+    # await state.update_data(money=message.text)
+    # data = await state.get_data()
+    # count = data.get('money')
+    try:
+        if valuta_var == 'BYN':
+            s.query(Expenses).get(message.from_user.id).expenses_today += float(message.text)
+            s.query(Expenses).get(message.from_user.id).expenses_mounth += float(message.text)
+            s.query(Expenses).get(message.from_user.id).expenses_all += float(message.text)
+            await bot.send_message(message.from_user.id, f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today)} BYN', reply_markup=inline_kb1)
+        elif valuta_var == 'USD':
+            x = float(message.text) * item
+            s.query(Expenses).get(message.from_user.id).expenses_today += x
+            s.query(Expenses).get(message.from_user.id).expenses_mounth += x
+            s.query(Expenses).get(message.from_user.id).expenses_all += x
+            await bot.send_message(message.from_user.id, f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today // item)}$', reply_markup=inline_kb2)
+    except:
+        await bot.send_message(message.from_user.id,
+                               f'НЕ ДОБАВЛЕНО',
+                               reply_markup=profile_kb)
+    await state.finish()
+    s.commit()
+    s.close()
+
+
+@dp.callback_query_handler(text='button1')
+async def process_callback_button1(message: types.Message):
+    await bot.send_message(message.from_user.id,
+                           f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today//item)}$', reply_markup=profile_kb_ru)
+
+
+@dp.callback_query_handler(text='button2')
+async def process_callback_button1(message: types.Message):
+    await bot.send_message(message.from_user.id,
+                           f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today)} BYN', reply_markup=profile_kb_ru)
+
+
+async def remove_today_finance_data():
+    for i in s.query(Expenses).all():
+        s.query(Expenses).get(i.id).expenses_today = 0
+    s.commit()
+    s.close()
+
+
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(commands_start, CommandStart(), state=None)
     dp.register_message_handler(choose_language, state=FSMregistr.language_)
-    dp.register_message_handler(profile, commands=['profile', 'Профиль'])
-    dp.register_message_handler(commands_help, commands=['Help', 'Помощь'])
+    dp.register_message_handler(profile, commands=['PROFIL', 'ПРОФИЛЬ'])
+    dp.register_message_handler(commands_help, commands=['HELP', 'Помощь'])
 
     dp.register_message_handler(workout_w, commands=['Sport', 'Спорт'])
 
@@ -322,3 +409,8 @@ def register_handlers_client(dp: Dispatcher):
 
     dp.register_message_handler(all_ex, commands=['statistics', 'статистика'])
     dp.register_message_handler(creator, commands=['admin'])
+
+    dp.register_message_handler(expenses_def, commands=['expenses', 'РАСХОДЫ'], state=None)
+    dp.register_message_handler(valuta, state=FSMmoney.valuta_)
+    dp.register_message_handler(expenses_save, state=FSMmoney.money)
+
