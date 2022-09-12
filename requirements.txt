@@ -4,3 +4,5 @@ aioschedule
 sqlalchemy
 faker
 psycopg2
+requests
+bs4
