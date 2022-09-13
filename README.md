@@ -4,4 +4,4 @@
 <div>▫️Контроль физической активности</div>
 <div>▫️Администрация групп</div>
 <br>
-<div>The bot administers groups, sends scheduled polls. Monitors physical condition of a person and keeps track of expenses</div>
+The bot **administers** groups, sends scheduled **polls**. **Monitors** physical condition of a person and keeps track of **expenses**
