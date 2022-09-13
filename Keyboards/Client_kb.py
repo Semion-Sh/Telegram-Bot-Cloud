@@ -24,4 +24,4 @@ push_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).
 bars_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b13, b7)
 pull_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b14, b7)
 language_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b16, b15)
-valuta_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b18, b19)
+valuta_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b18, b19).add(b1)

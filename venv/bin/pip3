@@ -1,4 +1,4 @@
-#!/Users/vit/Desktop/Bot_Python/venv/bin/python3
+#!/Users/mac/Desktop/Bot-Telegram-Aiogram-master/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
