@@ -3,5 +3,5 @@
 <div>▫️Создание автоматических  опросов </div>
 <div>▫️Контроль физической активности</div>
 <div>▫️Администрация групп</div>
-/n
+<br>
 <div>The bot administers groups, sends scheduled polls. Monitors physical condition of a person and keeps track of expenses</div>
