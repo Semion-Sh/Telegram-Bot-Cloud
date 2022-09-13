@@ -62,11 +62,11 @@ async def commands_start(message: types.Message):
 
 async def choose_language(message: types.Message, state: FSMContext):
     global language
-    if message.text in ['Russian', 'Русский']:
+    if message.text in ['Russian', 'Русский', 'РУССКИЙ']:
         language = 'Russian'
         await bot.send_message(message.from_user.id, f'Привет, {message.from_user.first_name}',
                                 reply_markup=unregistered_user_kb_ru)
-    elif message.text in ['English', 'Английский']:
+    elif message.text in ['English', 'Английский', 'ENGLISH']:
         language = 'English'
         await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}',
                                 reply_markup=unregistered_user_kb)
@@ -394,15 +394,15 @@ def register_handlers_client(dp: Dispatcher):
 
     dp.register_message_handler(workout_w, commands=['SPORT', 'СПОРТ'])
 
-    dp.register_message_handler(push_ups, commands=[f'Push_ups', 'Отжимания'])
+    dp.register_message_handler(push_ups, commands=[f'PUSH_UPS', 'Отжимания'])
     dp.register_message_handler(Add_push_ups, commands=['AddPushUps', 'ДобавитьОтжимания'], state=None)
     dp.register_message_handler(save_push_ups, state=FSMpush_ups.push_ups)
 
-    dp.register_message_handler(bars, commands=['Bars', 'Брусья'])
+    dp.register_message_handler(bars, commands=['BARS', 'Брусья'])
     dp.register_message_handler(Add_bars, commands=['AddBars', 'ДобавитьБрусья'], state=None)
     dp.register_message_handler(save_bars, state=FSMbars.bars)
 
-    dp.register_message_handler(pull_ups, commands=['pull_ups', 'Подтягивания'])
+    dp.register_message_handler(pull_ups, commands=['PULL_UPS', 'Подтягивания'])
     dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'Добавить'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
