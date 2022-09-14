@@ -419,7 +419,7 @@ async def remove_today_finance_data():
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(commands_start, CommandStart(), state=None)
     dp.register_message_handler(choose_language, state=FSMregistr.language_)
-    dp.register_message_handler(profile, commands=['profil','PROFIL', 'ПРОФИЛЬ'])
+    dp.register_message_handler(profile, commands=['profil', 'ПРОФИЛЬ'])
     dp.register_message_handler(commands_help, commands=['HELP', 'ПОМОЩЬ'])
 
     dp.register_message_handler(workout_w, commands=['SPORT', 'СПОРТ'])
