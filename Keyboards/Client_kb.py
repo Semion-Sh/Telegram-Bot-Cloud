@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-b1 = KeyboardButton('/PROFIL')
+b1 = KeyboardButton('/PROFILE')
 b2 = KeyboardButton('/HELP')
 b6 = KeyboardButton('/EXPENSES')
 b7 = KeyboardButton('/SPORT')
