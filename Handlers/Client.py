@@ -1,6 +1,6 @@
 import asyncio, aioschedule
-from Keyboards import inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
- unregistered_user_kb_ru, profile_kb_ru, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
+from Keyboards import rof, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+ unregistered_user_kb_ru, profile_kb_ru, statistics, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot, dp
@@ -13,7 +13,7 @@ from aiogram.dispatcher import Dispatcher
 import psycopg2
 from sqlalchemy import create_engine
 from aiogram.dispatcher.filters import CommandStart
-from myfin import item
+from myfin import prodaja, nbrb, pokupka
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
 cur = conn.cursor()
@@ -95,19 +95,21 @@ async def commands_help(message: types.Message):
     if s.query(Users).get(message.from_user.id).language == 'Russian':
         await bot.send_message(message.from_user.id, '''
         Список команд:
-/Profile - ваш профиль
-/Admin - профиль создателя Бота
-/Water - контроль потребления воды
-/Sport - отслеживать спортивную активность
-/Statistics - статистика за весь период''')
+/PROFILE - ваш профиль
+/ADMIN - создатель Бота
+/SPORT - спортивная активность
+/STATISTICS - статистика за весь период
+/EXPENSES - учет расходов
+''')
     elif s.query(Users).get(message.from_user.id).language == 'English':
         await bot.send_message(message.from_user.id, '''
         Command List:
-/Profile - your profile
-/Admin - Bot creator profile
-/Water - water consumption control
-/Sport - track sports activity
-/Statistics - statistics for the entire period''')
+/PROFILE - your profile
+/ADMIN - Bot creator
+/SPORT - sports activity
+/STATISTICS - statistics for the entire period
+/EXPENSES - cost accounting
+''')
 
 
 async def workout_w(message: types.Message):
@@ -341,6 +343,12 @@ async def valuta(message: types.Message, state: FSMContext):
     await FSMmoney.money.set()
 
 
+async def expenses(message: types.Message):
+    await bot.send_message(message.from_user.id,
+                           f'-',
+                           reply_markup=rof)
+
+
 async def expenses_save(message: types.Message, state: FSMContext):
     global valuta_var
     # await state.update_data(money=message.text)
@@ -353,11 +361,11 @@ async def expenses_save(message: types.Message, state: FSMContext):
             s.query(Expenses).get(message.from_user.id).expenses_all += float(message.text)
             await bot.send_message(message.from_user.id, f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today)} BYN', reply_markup=inline_kb1)
         elif valuta_var == 'USD':
-            x = float(message.text) * item
+            x = float(message.text) * nbrb
             s.query(Expenses).get(message.from_user.id).expenses_today += x
             s.query(Expenses).get(message.from_user.id).expenses_mounth += x
             s.query(Expenses).get(message.from_user.id).expenses_all += x
-            await bot.send_message(message.from_user.id, f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today // item)}$', reply_markup=inline_kb2)
+            await bot.send_message(message.from_user.id, f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today // nbrb)}$', reply_markup=inline_kb2)
     except:
         await bot.send_message(message.from_user.id,
                                f'НЕ ДОБАВЛЕНО',
@@ -367,10 +375,32 @@ async def expenses_save(message: types.Message, state: FSMContext):
     s.close()
 
 
+class FSMstatistics_kind(StatesGroup):
+    kind = State()
+
+
+async def statistics_expenses(message: types.Message):
+    await bot.send_message(message.from_user.id,
+                           f'-', reply_markup=statistics)
+    await FSMstatistics_kind.kind.set()
+
+
+async def statistics_expenses_kind(message: types.Message, state: FSMContext):
+    if message.text == 'ЗА ДЕНЬ':
+        await bot.send_message(message.from_user.id,
+                               f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today)}BYN',
+                               reply_markup=inline_kb1)
+    if message.text == 'ЗА МЕСЯЦ':
+        await bot.send_message(message.from_user.id,
+                               f'ЗА ЭТОТ МЕСЯЦ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_mounth)}BYN',
+                               reply_markup=inline_kb1)
+    await state.finish()
+
+
 @dp.callback_query_handler(text='button1')
 async def process_callback_button1(message: types.Message):
     await bot.send_message(message.from_user.id,
-                           f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today//item)}$', reply_markup=profile_kb_ru)
+                           f'СЕГОДНЯ ТЫ ПОТРАТИЛ(А) - {toFixed(s.query(Expenses).get(message.from_user.id).expenses_today//prodaja)}$', reply_markup=profile_kb_ru)
 
 
 @dp.callback_query_handler(text='button2')
@@ -394,22 +424,25 @@ def register_handlers_client(dp: Dispatcher):
 
     dp.register_message_handler(workout_w, commands=['SPORT', 'СПОРТ'])
 
-    dp.register_message_handler(push_ups, commands=[f'PUSH_UPS', 'Отжимания'])
-    dp.register_message_handler(Add_push_ups, commands=['AddPushUps', 'ДобавитьОтжимания'], state=None)
+    dp.register_message_handler(push_ups, commands=[f'PUSH_UPS', 'ОТЖИМАНИЯ'])
+    dp.register_message_handler(Add_push_ups, commands=['ADD_PUSH_UPS', 'ДОБАВИТЬ_ОТЖИМАНИЯ'], state=None)
     dp.register_message_handler(save_push_ups, state=FSMpush_ups.push_ups)
 
-    dp.register_message_handler(bars, commands=['BARS', 'Брусья'])
-    dp.register_message_handler(Add_bars, commands=['AddBars', 'ДобавитьБрусья'], state=None)
+    dp.register_message_handler(bars, commands=['BARS', 'БРУСЬЯ'])
+    dp.register_message_handler(Add_bars, commands=['ADD_BARS', 'ДОБАВИТЬ_БРУСЬЯ'], state=None)
     dp.register_message_handler(save_bars, state=FSMbars.bars)
 
-    dp.register_message_handler(pull_ups, commands=['PULL_UPS', 'Подтягивания'])
-    dp.register_message_handler(add_pull_ups, commands=['AddPullUps', 'Добавить'], state=None)
+    dp.register_message_handler(pull_ups, commands=['PULL_UPS', 'ПОДТЯГИВАНИЯ'])
+    dp.register_message_handler(add_pull_ups, commands=['ADD_PULL_UPS', 'ДОБАВИТЬ_ПОДТЯГИВАНИЯ'], state=None)
     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 
     dp.register_message_handler(all_ex, commands=['STATISTICS', 'СТАТИСТИКА'])
-    dp.register_message_handler(creator, commands=['admin'])
+    dp.register_message_handler(creator, commands=['ADMIN'])
 
-    dp.register_message_handler(expenses_def, commands=['EXPENSES', 'РАСХОДЫ'], state=None)
+    dp.register_message_handler(expenses, commands=['EXPENSES', 'РАСХОДЫ'],)
+    dp.register_message_handler(statistics_expenses, commands=['STATISTICS_EXPENSES', 'СТАТИСТИКА_РАСХОДОВ'], state=None)
+    dp.register_message_handler(statistics_expenses_kind, state=FSMstatistics_kind.kind)
+    dp.register_message_handler(expenses_def, commands=['ADD_EXPENSE', 'ДОБАВИТЬ_РАСХОД'], state=None)
     dp.register_message_handler(valuta, state=FSMmoney.valuta_)
     dp.register_message_handler(expenses_save, state=FSMmoney.money)
 
