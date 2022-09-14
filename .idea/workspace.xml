@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87d6ebf5-6a08-4dd3-93e1-5fd52c257bde" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/Client_kb.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/Client_kb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/Client_kb_ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/Client_kb_ru.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myfin.py" beforeDir="false" afterPath="$PROJECT_DIR$/myfin.py" afterDir="false" />
-    </list>
+    <list default="true" id="87d6ebf5-6a08-4dd3-93e1-5fd52c257bde" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -223,7 +215,7 @@
       <workItem from="1663012047908" duration="2042000" />
       <workItem from="1663075495134" duration="4261000" />
       <workItem from="1663086729609" duration="562000" />
-      <workItem from="1663087303943" duration="7936000" />
+      <workItem from="1663087303943" duration="8351000" />
     </task>
     <servers />
   </component>
