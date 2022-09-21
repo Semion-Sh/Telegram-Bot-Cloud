@@ -15,6 +15,10 @@ b16 = KeyboardButton('ENGLISH')
 b17 = KeyboardButton('/STATISTICS')
 b18 = KeyboardButton('/BYN')
 b19 = KeyboardButton('/USD')
+b22 = KeyboardButton('/PHOTO')
+b23 = KeyboardButton('/SEE')
+b24 = KeyboardButton('/DOWNLOAD')
+
 
 main_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1, b2)
 unregistered_user_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b2)
@@ -25,3 +29,4 @@ bars_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(
 pull_ups_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b14, b7)
 language_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b16, b15)
 valuta_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b18, b19).add(b1)
+photo = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b23, b24)

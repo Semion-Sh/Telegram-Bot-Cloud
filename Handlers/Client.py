@@ -1,5 +1,5 @@
 import asyncio, aioschedule
-from Keyboards import rof, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
+from Keyboards import rof, photo_ru, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
  unregistered_user_kb_ru, profile_kb_ru, statistics, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -7,13 +7,18 @@ from create_bot import bot, dp
 from DateBase.users import Users
 from DateBase.workout import Workout
 from DateBase.expenses import Expenses
+from DateBase.sport_photo import Photo
 from DateBase.DATABASE import session
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 import psycopg2
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, update
 from aiogram.dispatcher.filters import CommandStart
 from myfin import prodaja, nbrb, pokupka
+from aiogram.types import ContentType
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
+
 
 conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com", port=5432, database="dcl69hnioedc5p", user="gvaoqrlriwfoad", password="055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54")
 cur = conn.cursor()
@@ -21,7 +26,6 @@ print("Database opened successfully")
 
 engine = create_engine("postgresql+psycopg2://gvaoqrlriwfoad:055f19b677f01b0411151ab91809d03ff4007515e82a428cb9f4148d8badfa54@ec2-52-207-15-147.compute-1.amazonaws.com/dcl69hnioedc5p")
 engine.connect()
-
 s = session()
 
 
@@ -110,6 +114,64 @@ async def commands_help(message: types.Message):
 /STATISTICS - statistics for the entire period
 /EXPENSES - cost accounting
 ''')
+
+
+async def photo_menu(message: types.Message):
+    await bot.send_message(message.from_user.id, '-', reply_markup=photo_ru)
+
+
+async def workout_photo(message: types.Message):
+    if message.from_user.username != None:
+        tg_username = '@' + message.from_user.username
+    else:
+        tg_username = 'Not'
+    if s.query(Photo.id).filter(Photo.id == message.from_user.id).first():
+        if s.query(Photo).get(message.from_user.id).pic_before != '':
+            await bot.send_message(message.from_user.id, 'send me photo of your progres body')
+        else:
+            await bot.send_message(message.from_user.id, 'send me the first photo of your body')
+    else:
+        photo = Photo(id=message.from_user.id, tg_username=tg_username, users_id=message.from_user.id)
+        s.add(photo)
+        s.commit()
+        s.close()
+
+
+async def workout_save(message: types.Message):
+    if message.from_user.username != None:
+        tg_username = '@' + message.from_user.username
+    else:
+        tg_username = 'Not'
+    document_id = message.photo[-1].file_id
+    file_info = await bot.get_file(document_id)
+    if s.query(Photo).get(message.from_user.id).pic_before != '':
+        s.query(Photo).get(message.from_user.id).pic_after = file_info.file_id
+        # session.executes(update(Photo).where(Photo.id == message.from_user.id).values(pic_after=file_info.file_id).\
+        #     execution_options(synchronize_session="fetch"))
+        # photo = Photo(id=message.from_user.id, tg_username=tg_username, users_id=message.from_user.id,
+        #               pic_after=file_info.file_id)
+        # s.add(photo)
+    else:
+        s.query(Photo).get(message.from_user.id).pic_before = file_info.file_id
+        # session.executes(update(Photo).where(Photo.id == message.from_user.id).values(pic_before=file_info.file_id).\
+        #            execution_options(synchronize_session="fetch"))
+    s.commit()
+    s.close()
+
+
+async def send_foto(message: types.Message):
+    date_before = {'year': str(s.query(Photo).get(message.from_user.id).date_pic_before)[:4],
+                   'mounth': str(s.query(Photo).get(message.from_user.id).date_pic_before)[4:8],
+                   'day': str(s.query(Photo).get(message.from_user.id).date_pic_before)[8:10]}
+    date_after = {'year': str(s.query(Photo).get(message.from_user.id).date_pic_after)[:4],
+                   'mounth': str(s.query(Photo).get(message.from_user.id).date_pic_after)[4:8],
+                   'day': str(s.query(Photo).get(message.from_user.id).date_pic_after)[8:10]}
+    await bot.send_message(message.from_user.id, date_before['day']+date_before['mounth']+date_before['year'])
+    await bot.send_photo(message.from_user.id, photo=s.query(Photo).get(message.from_user.id).pic_before)
+
+    await bot.send_message(message.from_user.id, date_after['day']+date_after['mounth']+date_after['year'])
+    await bot.send_photo(message.from_user.id, photo=s.query(Photo).get(message.from_user.id).pic_after)
+
 
 
 async def workout_w(message: types.Message):
@@ -422,6 +484,12 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(profile, commands=['profile', 'ПРОФИЛЬ'])
     dp.register_message_handler(commands_help, commands=['HELP', 'ПОМОЩЬ'])
 
+    dp.register_message_handler(photo_menu, commands=['PHOTO', 'ФОТО'])
+    dp.register_message_handler(workout_photo, commands=['DOWNLOAD', 'ЗАГРУЗИТЬ'])
+    dp.register_message_handler(workout_save, content_types=ContentType.PHOTO)
+    dp.register_message_handler(send_foto, commands=['SEE', 'ПОСМОТРЕТЬ'])
+
+
     dp.register_message_handler(workout_w, commands=['SPORT', 'СПОРТ'])
 
     dp.register_message_handler(push_ups, commands=[f'PUSH_UPS', 'ОТЖИМАНИЯ'])
@@ -438,6 +506,7 @@ def register_handlers_client(dp: Dispatcher):
 
     dp.register_message_handler(all_ex, commands=['STATISTICS', 'СТАТИСТИКА'])
     dp.register_message_handler(creator, commands=['ADMIN'])
+
 
     dp.register_message_handler(expenses, commands=['EXPENSES', 'РАСХОДЫ'],)
     dp.register_message_handler(statistics_expenses, commands=['STATISTICS_EXPENSES', 'СТАТИСТИКА_РАСХОДОВ'], state=None)
