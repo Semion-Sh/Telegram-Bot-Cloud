@@ -23,7 +23,7 @@ async def mat_block(message: types.Message):
 
 # football poll
 async def spam_start():
-    aioschedule.every().sunday.at('08:00').do(football_poll_rafieva)
+    aioschedule.every().sunday.at('08:10').do(football_poll_rafieva)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(0)
