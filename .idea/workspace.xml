@@ -6,11 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="87d6ebf5-6a08-4dd3-93e1-5fd52c257bde" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DateBase/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DateBase/DATABASE.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/DATABASE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DateBase/expenses.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/expenses.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DateBase/sport_photo.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/sport_photo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DateBase/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DateBase/workout.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/workout.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Handlers/Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/Client_kb.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/Client_kb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/Client_kb_ru.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/Client_kb_ru.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Other.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +104,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="intervue" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Bot-Telegram-Aiogram-master" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../programming" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../programming/intervue.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="myfin" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Bot-Telegram-Aiogram-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -113,28 +140,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/myfin.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="users" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Bot_Python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DateBase" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DateBase/users.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -161,10 +166,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Bot" />
+        <item itemvalue="Python.intervue" />
         <item itemvalue="Python.Client" />
         <item itemvalue="Python.myfin" />
         <item itemvalue="Python tests.Python tests in test_bot.py" />
-        <item itemvalue="Python.users" />
       </list>
     </recent_temporary>
   </component>
@@ -224,7 +229,19 @@
       <workItem from="1663086729609" duration="562000" />
       <workItem from="1663087303943" duration="16696000" />
       <workItem from="1663584952597" duration="619000" />
-      <workItem from="1663749693156" duration="12805000" />
+      <workItem from="1663749693156" duration="13108000" />
+      <workItem from="1663851328041" duration="303000" />
+      <workItem from="1663923196993" duration="2634000" />
+      <workItem from="1664209174104" duration="210000" />
+      <workItem from="1664275660063" duration="1475000" />
+      <workItem from="1664277570878" duration="1700000" />
+      <workItem from="1664480008943" duration="2000" />
+      <workItem from="1664537297147" duration="599000" />
+      <workItem from="1664784435473" duration="598000" />
+      <workItem from="1665498124600" duration="1971000" />
+      <workItem from="1666179770821" duration="1380000" />
+      <workItem from="1666198842011" duration="53000" />
+      <workItem from="1666199062384" duration="1948000" />
     </task>
     <servers />
   </component>
@@ -244,11 +261,12 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$db_profile.coverage" NAME="db_profile Coverage Results" MODIFIED="1659649076934" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DateBase" />
-    <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1663766820466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1666200864941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$Admin.coverage" NAME="Admin Coverage Results" MODIFIED="1659610716517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Handlers" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$users.coverage" NAME="users Coverage Results" MODIFIED="1659774741734" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DateBase" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$Client.coverage" NAME="Client Coverage Results" MODIFIED="1663177759205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Handlers" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$water.coverage" NAME="water Coverage Results" MODIFIED="1659774455076" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DateBase" />
+    <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$intervue.coverage" NAME="intervue Coverage Results" MODIFIED="1663851629794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../programming" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$myfin.coverage" NAME="myfin Coverage Results" MODIFIED="1663156044808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Bot_Telegram_Aiogram_master$.coverage" NAME=" Coverage Results" MODIFIED="1660212525287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
