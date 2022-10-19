@@ -30,7 +30,7 @@ async def spam_start():
 
 
 async def english_spam_start():
-    aioschedule.every().day.at('18:00').do(english)
+    aioschedule.every().day.at('18:30').do(english)
 
     while True:
         await aioschedule.run_pending()
