@@ -28,7 +28,7 @@ from selenium.webdriver.chrome.options import Options
 import Config
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-
+import os
 
 
 # conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com",
@@ -114,12 +114,15 @@ async def commands_start(message: types.Message):
 
 
 async def english():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_SHIM', None)
+    browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
     solid = 1
     # driver = webdriver.Chrome(executable_path='/Users/mac/Desktop/programming/instagram_bot/chromedrivers')
     time.sleep(1)
-    options = Options()
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    browser = webdriver.Chrome("chromedriver", options=options)
+    # options = Options()
+    # options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    # browser = webdriver.Chrome("chromedriver", options=options)
     # browser.set_window_size(800, 900)
     # browser.maximize_window()
     browser.get('https://www.instagram.com/')
