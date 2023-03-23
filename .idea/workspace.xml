@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87d6ebf5-6a08-4dd3-93e1-5fd52c257bde" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Bot-Telegram-Aiogram-master.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Bot-Telegram-Aiogram-master.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DateBase/DATABASE.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateBase/DATABASE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/Admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/Other.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/Other.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMG_735.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Keyboards/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Keyboards/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kinds_of_poll.py" beforeDir="false" afterPath="$PROJECT_DIR$/kinds_of_poll.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_bot.py" beforeDir="false" />
-    </list>
+    <list default="true" id="87d6ebf5-6a08-4dd3-93e1-5fd52c257bde" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -251,6 +234,7 @@
       <workItem from="1666199062384" duration="4700000" />
       <workItem from="1679323577345" duration="6818000" />
       <workItem from="1679496312796" duration="12748000" />
+      <workItem from="1679594017222" duration="777000" />
     </task>
     <servers />
   </component>
