@@ -13,23 +13,23 @@ from create_bot import bot, dp
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 # import psycopg2
-from sqlalchemy import create_engine, update
+# from sqlalchemy import create_engine, update
 from aiogram.dispatcher.filters import CommandStart
-from myfin import prodaja, nbrb, pokupka
-from aiogram.types import ContentType
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
-import requests
-import time
-from urllib.parse import urlencode
-import hmac
-import hashlib
-import time
-from selenium.webdriver.chrome.options import Options
-import Config
-from selenium.webdriver.common.by import By
-from selenium import webdriver
-import os
+# from myfin import prodaja, nbrb, pokupka
+# from aiogram.types import ContentType
+# from sqlalchemy.orm import Session
+# from sqlalchemy.orm import sessionmaker
+# import requests
+# import time
+# from urllib.parse import urlencode
+# import hmac
+# import hashlib
+# import time
+# from selenium.webdriver.chrome.options import Options
+# import Config
+# from selenium.webdriver.common.by import By
+# from selenium import webdriver
+# import os
 
 
 # conn = psycopg2.connect(host="ec2-52-207-15-147.compute-1.amazonaws.com",
