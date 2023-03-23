@@ -1,6 +1,7 @@
 import asyncio, aioschedule
-from Keyboards import rof, photo_ru, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb,\
- unregistered_user_kb_ru, profile_kb_ru, statistics, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
+from Keyboards import rof, photo_ru, inline_kb1, inline_kb2, main_kb, valuta_kb, unregistered_user_kb, profile_kb, \
+    workout_kb, push_ups_kb, bars_kb, pull_ups_kb, language_kb, \
+    unregistered_user_kb_ru, profile_kb_ru, statistics, workout_kb_ru, push_ups_kb_ru, bars_kb_ru, pull_ups_kb_ru
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot, dp
@@ -65,6 +66,7 @@ class FSMpull_ups(StatesGroup):
 
 language = ''
 
+
 #
 # async def get_info():
 #     values = dict()
@@ -110,74 +112,18 @@ language = ''
 
 async def commands_start(message: types.Message):
     if message.chat.type == 'private':
-        await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}')
+        await bot.send_message(message.from_user.id, f'''Приветствуем, {message.from_user.first_name}, Cyprus Realty bot
+Это бот для поиска и продажи недвижимости на Кипре
 
+Здесь вы можете создать свой запрос и начать получать предложения от живых риелторов.
+Если предложение не подходит, то вы можете отклонить его и продолжить получать другие варианты. Если вы получите подходящее предложение, то можете принять его и продолжить общение с риелтором.
 
-async def english():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_SHIM', None)
-    browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
-    solid = 1
-    # driver = webdriver.Chrome(executable_path='/Users/mac/Desktop/programming/instagram_bot/chromedrivers')
-    time.sleep(1)
-    # options = Options()
-    # options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    # browser = webdriver.Chrome("chromedriver", options=options)
-    # browser.set_window_size(800, 900)
-    # browser.maximize_window()
-    browser.get('https://www.instagram.com/')
+- Это абсолютно бесплатно
+- Обширная база недвижимости
+- Конфиденциальность. Только вы решаете кому давать свой номер телефона
 
-    time.sleep(2)
+Вы можете создать заявку, нажав на кнопку «Создать заявку»''')
 
-    username = browser.find_element(By.NAME, "username")
-    username.send_keys(Config.username)
-    time.sleep(3)
-
-    password = browser.find_element(By.NAME, "password")
-    password.send_keys(Config.password)
-    time.sleep(2)
-
-    login = browser.find_element(By.XPATH, '//*[@id="loginForm"]/div/div[3]')
-    login.click()
-    # return;
-    time.sleep(10)
-
-
-    notnow = browser.find_element(By.XPATH,
-                                      '/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]/button[2]')
-    notnow.click()
-    time.sleep(4)
-
-
-    browser.get('https://www.instagram.com/lazy_english/')
-    time.sleep(5)
-
-    post = browser.find_element(By.XPATH,
-                                '/html/body/div[1]/div/div/div/div[1]/div/div/div/div[1]/section/main/div/div[2]/article/div[1]/div/div[1]/div[1]')
-    post.click()
-    time.sleep(4)
-
-    post = browser.find_element(By.XPATH,
-                                    '/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/article/div/div[2]/div/div/div[2]/div[1]/ul/div/li/div/div/div[2]')
-    # post.click()
-    photo = browser.find_element(By.XPATH,
-                                     '/html/body/div[1]/div/div/div/div[2]/div/div/div[1]/div/div[3]/div/div/div/div/div[2]/div/article/div/div[1]/div/div/div/div[1]/img').get_attribute(
-            "src")
-    post_text = post.text[116:]
-    await bot.send_photo(chat_id='-1001772350531', photo=photo, caption=post_text)
-    # print(post_text)
-    # print(photo)
-    time.sleep(4)
-
-
-#         if s.query(Users.id).filter(Users.id == message.from_user.id).first():
-#             try:
-#                 await bot.send_message(message.from_user.id, f'Hello, {message.from_user.first_name}', reply_markup=main_kb)
-#             except:
-#                 await message.reply('Чтобы я смог с тобой общаться, напиши мне: https://web.telegram.org/z/#5258746451')
-#         else:
-#             await FSMregistr.language_.set()
-#             await bot.send_message(message.from_user.id, f'Choose language | Выберите язык', reply_markup=language_kb)
 
 #
 # async def choose_language(message: types.Message, state: FSMContext):
@@ -462,10 +408,6 @@ async def english():
 #     await state.finish()
 #
 #
-# async def creator(message: types.Message):
-#     await bot.send_message(message.from_user.id, '@sem4ek')
-#     if message.chat.type != 'private':
-#         await message.delete()
 #
 #
 # async def remove_today_data():
@@ -619,7 +561,7 @@ async def english():
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(commands_start, CommandStart(), state=None)
-    dp.register_message_handler(english, commands=['english'])
+    # dp.register_message_handler(english, commands=['english'])
     # dp.register_message_handler(main, commands=['crypto'])
 #     dp.register_message_handler(choose_language, state=FSMregistr.language_)
 #     dp.register_message_handler(profile, commands=['profile', 'ПРОФИЛЬ'])
@@ -646,7 +588,7 @@ def register_handlers_client(dp: Dispatcher):
 #     dp.register_message_handler(save_pull_ups, state=FSMpull_ups.pull_ups)
 #
 #     dp.register_message_handler(all_ex, commands=['STATISTICS', 'СТАТИСТИКА'])
-#     dp.register_message_handler(creator, commands=['ADMIN'])
+
 #
 #
 #     dp.register_message_handler(expenses, commands=['EXPENSES', 'РАСХОДЫ'],)

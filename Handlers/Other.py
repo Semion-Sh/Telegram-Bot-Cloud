@@ -2,14 +2,15 @@ from aiogram import types
 import json, string
 from aiogram.dispatcher import Dispatcher
 import asyncio, aioschedule
-from kinds_of_poll import football_poll_rafieva
+# from kinds_of_poll import football_poll_rafieva
 from aiogram.types import BotCommand
-from .Client import english
+# from .Client import english
 
 
 bot_commands = [
-    BotCommand('/admin', 'профиль создателя Бота'),
-    BotCommand('/profile', 'твой профиль '),
+    BotCommand('/support', 'служба поддержки'),
+    BotCommand('/start', 'перезапустить бота'),
+    BotCommand('/interview', 'начать собеседование'),
 ]
 
 
@@ -22,11 +23,11 @@ async def mat_block(message: types.Message):
 
 
 # football poll
-async def spam_start():
-    aioschedule.every().sunday.at('08:10').do(football_poll_rafieva)
-    while True:
-        await aioschedule.run_pending()
-        await asyncio.sleep(0)
+# async def spam_start():
+#     aioschedule.every().sunday.at('08:10').do(football_poll_rafieva)
+#     while True:
+#         await aioschedule.run_pending()
+#         await asyncio.sleep(0)
 
 
 async def english_spam_start():

@@ -1,15 +1,15 @@
-# from aiogram.dispatcher import FSMContext
-# from aiogram.dispatcher.filters.state import State, StatesGroup
-# from aiogram import types
-# from create_bot import bot, dp
-# from aiogram.dispatcher import Dispatcher
-# from aiogram.dispatcher.filters import Text
-# from Keyboards import Admin_kb
-# from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram import types
+from create_bot import bot, dp
+from aiogram.dispatcher import Dispatcher
+from aiogram.dispatcher.filters import Text
+from Keyboards import Admin_kb
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 #
-#
-# ID = None
-# Name = None
+ID = 785933034
+Name = None
 #
 #
 # class FSMAdmin(StatesGroup):
@@ -19,11 +19,15 @@
 #     Girlfriend = State()
 #
 #
-# async def make_changes_commands(message: types.Message):
-#     global ID
-#     ID = message.from_user.id
-#     await bot.send_message(message.from_user.id, 'I am listening', reply_markup=Admin_kb.button_case_admin)
-#     await message.delete()
+async def admin(message: types.Message):
+    global ID
+    if message.chat.type == 'private' and message.from_user.id == ID:
+        await bot.send_message(message.from_user.id, 'I am listening', reply_markup=Admin_kb.button_case_admin)
+    elif message.chat.type != 'private' and message.from_user.id == ID:
+        await bot.send_message(message.from_user.id, 'I am listening', reply_markup=Admin_kb.button_case_admin)
+        await message.delete()
+    else:
+        await message.delete()
 #
 #
 # # start downloading
@@ -96,7 +100,8 @@
 #                                    add(InlineKeyboardButton(f'delete {ret[1]}', callback_data=f'del {ret[1]}')))
 #
 #
-# def register_handlers_admin(dp: Dispatcher):
+def register_handlers_admin(dp: Dispatcher):
+    dp.register_message_handler(admin, commands=['admin'])
 #     dp.register_message_handler(cm_start, commands=['upload'], state=None)
 #     dp.register_message_handler(load_photo, content_types=['photo'], state=FSMAdmin.Photo)
 #     dp.register_message_handler(load_name, state=FSMAdmin.Name)
@@ -104,6 +109,6 @@
 #     dp.register_message_handler(load_girlfriend, state=FSMAdmin.Girlfriend)
 #     dp.register_message_handler(cancel_handler, state="*", commands='end')
 #     dp.register_message_handler(cancel_handler, Text(equals='end', ignore_case=True), state='*')
-#     dp.register_message_handler(make_changes_commands, commands=['moderator'], is_chat_admin=True)
+# , is_chat_admin=True
 #     dp.register_message_handler(delete_item, commands=['delete'])
 #     dp.register_callback_query_handler(del_callback_run, lambda x: x.data and x.data.startswith('del '))
