@@ -1,8 +1,7 @@
-# TOKEN = '5662739762:AAF5slyKUMO0NXcIRMQy1R3ByHkfrBy5ZsQ'
-TOKEN = '6195376083:AAFjIvnfNbjkpRpX5NVeHvKaD9NhKD7Lv2s'
+TOKEN = ''
 
-username = 'Semen_n_n_'
-password = '903899Ss002'
+username = ''
+password = ''
 
 delay = 20
 
